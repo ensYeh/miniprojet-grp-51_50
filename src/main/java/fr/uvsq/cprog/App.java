@@ -22,6 +22,7 @@ public class App {
         Directory repertoireCourant = new Directory(System.getProperty("user.dir"));
 
         while (true) {
+            CommandManager.checkNotesFile();
             System.out.println("Contenu du répertoire courant :");
             Map<Integer, Path> numerosFichiers = Afficheur.afficherContenuAvecNumeros(repertoireCourant);
 
