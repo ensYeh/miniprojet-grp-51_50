@@ -20,6 +20,9 @@ public class CommandManager {
         }
     }
 
+    public static void find(Path path){
+
+    }
     public static void checkNotesFile() {
         String fileName = "notes.txt";
         Path filePath = Paths.get(fileName);

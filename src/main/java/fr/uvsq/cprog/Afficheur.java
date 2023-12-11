@@ -14,9 +14,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Afficheur {
-    public static Map<Integer, Path> afficherContenuAvecNumeros(Directory repertoire) throws IOException {
+    public static void displayCurrentDir(Directory directory) throws IOException {
 
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(repertoire.obtenirCheminComplet()))) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(directory.obtenirCheminComplet()))) {
             List<Path> elements = new ArrayList<>();
             int numero = 1;
 
@@ -34,13 +34,6 @@ public class Afficheur {
                 }
                 numero++;
             }
-
-            // Crée une map associant chaque numéro à son chemin correspondant
-            return elements.stream()
-                .collect(Collectors.toMap(
-                    path -> elements.indexOf(path) + 1,
-                    Function.identity()
-                ));
         }
     }
 }
