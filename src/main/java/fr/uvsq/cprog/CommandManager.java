@@ -23,22 +23,7 @@ public class CommandManager {
     public static void find(Path path){
 
     }
-    public static void checkNotesFile() {
-        String fileName = "notes.txt";
-        Path filePath = Paths.get(fileName);
-
-        try {
-            // Vérifie si le fichier n'existe pas avant de le créer
-            if (!Files.exists(filePath)) {
-                Files.createFile(filePath);
-                System.out.println("Le fichier \"" + fileName + "\" a été créé.");
-            } else {
-                System.out.println("Le fichier \"" + fileName + "\" existe déjà.");
-            }
-        } catch (IOException e) {
-            System.err.println("Erreur lors de la création du fichier \"" + fileName + "\": " + e.getMessage());
-        }
-    }
+    
 }
 
 
