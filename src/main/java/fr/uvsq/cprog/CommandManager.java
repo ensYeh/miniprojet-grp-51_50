@@ -1,46 +1,24 @@
 package fr.uvsq.cprog;
 
-//import java.util.List;
-//import java.util.stream.Collectors;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class CommandManager {
-
-    // private List<File> files;
-    // private FileElement currentDirectory;
-
-    //
-    // public void copy(int number) {
-    // if (number >= 0 && number < files.size()) {
-    // FileElement element = files.get(number);
-    // if (!element.isDirectory()) {
-    // String newName = element.getName();
-    // FileElement newFileCopy = new FileElement(number, element.getContent(),
-    // newName);
-    // files.add(newFileCopy);
-
-    // }
-    // }
-    // }
-
-    // public void past(int number) {
-    // if (number >= 0 && number < files.size()) {
-    // FileElement element = files.get(number);
-    // if (!element.isDirectory()) {
-    // final String newName = element.getName() + "-copy";
-    // boolean nameExists = files.stream().anyMatch(file ->
-    // file.getName().equals(newName));
-    // if (nameExists) {
-    // // Concaténer "-copy" au nom seulement si l'élément existe déjà
-    // final String finalNewName = newName + "-copy";
-
-    // FileElement newFileCopy = new FileElement(number, element.getContent(),
-    // finalNewName);
-    // files.add(newFileCopy);
-
-    // }
-    // }
-    // }
-
-    // }
-
+    public static void mkdir(Directory repertoireCourant, String line) throws IOException {
+        // Créer un nouveau répertoire
+        String[] parts = line.split(" ");
+        if (parts.length == 2) {
+            String nomRepertoire = parts[1];
+            Path cheminComplet = Paths.get(repertoireCourant.obtenirCheminComplet());
+            Path nouveauRepertoire = cheminComplet.resolve(nomRepertoire);
+            Files.createDirectory(nouveauRepertoire);
+            System.out.println("Répertoire créé : " + nouveauRepertoire.getFileName());
+        } else {
+            System.out.println("Utilisation incorrecte. Exemple : mkdir nomDuRepertoire");
+        }
+    }
 }
+
+
