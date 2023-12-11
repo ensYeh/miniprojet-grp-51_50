@@ -1,9 +1,9 @@
 package fr.uvsq.cprog;
 
-import java.util.List;
+//import java.util.List;
 //import java.util.stream.Collectors;
 
-public class Element {
+public class CommandManager {
 
     // private List<File> files;
     // private FileElement currentDirectory;
