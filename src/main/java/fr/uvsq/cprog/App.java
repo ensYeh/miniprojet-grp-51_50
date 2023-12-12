@@ -22,6 +22,7 @@ public class App {
         int currentElement = 0;
         while (true) {
             NoteManager.checkNotesFile();
+            NoteManager.sortNotes();
             System.out.println("Contenu du répertoire courant :");
             Afficheur.displayCurrentDir(currentDir);
             System.out.println("\nChemin complet depuis la racine du système de fichiers :");

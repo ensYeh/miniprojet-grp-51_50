@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 //import java.util.stream.Collectors;
+import java.util.Collections;
 //import java.util.stream.Stream;
 
 public class NoteManager {
@@ -48,6 +49,7 @@ public class NoteManager {
 
             if (!found) {
                 lines.add(number + " : " + note);
+                Collections.sort(lines);
             }
 
             Files.write(filePath, lines, StandardOpenOption.WRITE);
@@ -55,4 +57,41 @@ public class NoteManager {
             System.err.println("Erreur lors de la modification du fichier \"notes.txt\": " + e.getMessage());
         }
     }
+
+    public static void sortNotes() {
+        try {
+            String fileName = "notes.txt";
+            Path filePath = Paths.get(fileName);
+
+            List<String> lines = Files.readAllLines(filePath);
+
+            Collections.sort(lines);
+
+            Files.write(filePath, lines, StandardOpenOption.WRITE);
+        } catch (IOException e) {
+            System.err.println("Erreur lors du tri du fichier \"notes.txt\": " + e.getMessage());
+        }
+    }
 }
+
+    // public static void updateNote(int number, String note) {
+    //     try {
+    //         String fileName = "notes.txt";
+    //         Path filePath = Paths.get(fileName);
+
+    //         List<String> lines = Files.readAllLines(filePath);
+
+    //         for (int i = 0; i < lines.size(); i++) {
+    //             String line = lines.get(i);
+    //             if (line.startsWith(number + " : ")) {
+    //                 lines.set(i, number + " : " + note);
+    //                 break;
+    //             }
+    //         }
+
+//             Files.write(filePath, lines, StandardOpenOption.WRITE);
+//         } catch (IOException e) {
+//             System.err.println("Erreur lors de la modification du fichier \"notes.txt\": " + e.getMessage());
+//         }
+//     }
+// }
