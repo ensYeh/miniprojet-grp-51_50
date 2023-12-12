@@ -15,7 +15,7 @@ public class App {
         Terminal terminal = TerminalBuilder.terminal();
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
-                .completer(new StringsCompleter("create", "mkdir", "find", "+"))
+                .completer(new StringsCompleter("create", "mkdir", "find", "+", "visu"))
                 .build();
 
         Directory currentDir = new Directory(System.getProperty("user.dir"));
@@ -105,6 +105,11 @@ public class App {
                         default:
                             System.out.println("Unknown command: " + line);
                             break;
+
+                        case "visu":
+                            CommandManager.visu(currentDir, currentElement);
+                
+                            break;
                     }
                 } else {
                     // Traitement des commandes
@@ -121,8 +126,10 @@ public class App {
                         case "find":
                             CommandManager.find(currentDir.contentMap.get(currentElement));
                         default:
-                            System.out.println("Unknown command: " + line);
+                            //System.out.println("Unknown command: " + line);
                             break;
+
+                        
                     }
                 }
             } else {
