@@ -3,8 +3,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.List;
 
 public class CommandManager {
     public static void mkdir(Directory repertoireCourant, String line) throws IOException {
@@ -21,8 +21,18 @@ public class CommandManager {
         }
     }
 
-    public static void find(Path path) {
-    
+    public static void find(Path currentDir, String fileName) {
+        try {
+            Files.walk(currentDir)
+                    .filter(path -> path.getFileName().toString().equals(fileName))
+                    .forEach(file -> {
+                        Path relativePath = currentDir.relativize(file);
+                        System.out.println(relativePath.toString());
+                    });
+
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la recherche du fichier : " + e.getMessage());
+        }
     }
 
     public static void visu(Directory repertoireCourant, int numeroElement) {

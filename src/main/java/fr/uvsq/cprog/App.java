@@ -7,6 +7,8 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,10 +25,11 @@ public class App {
         while (true) {
             NoteManager.checkNotesFile();
             NoteManager.sortNotes();
-            System.out.println("Contenu du répertoire courant :");
+            System.out.println("\nContenu du répertoire courant :");
             Afficheur.displayCurrentDir(currentDir);
             System.out.println("\nChemin complet depuis la racine du système de fichiers :");
             System.out.println(currentDir.obtenirCheminComplet());
+            System.out.println("\nEntrer votre commande :");
 
             String line = reader.readLine("> ");
             String[] parts = line.split(" ");
@@ -108,7 +111,7 @@ public class App {
 
                         case "visu":
                             CommandManager.visu(currentDir, currentElement);
-                
+
                             break;
                     }
                 } else {
@@ -124,12 +127,10 @@ public class App {
                         case "exit":
                             return;
                         case "find":
-                            CommandManager.find(currentDir.contentMap.get(currentElement));
-                        default:
-                            //System.out.println("Unknown command: " + line);
+                            String fileNameToFind = parts[1];
+                            Path currentDirPath = Paths.get(currentDir.obtenirCheminComplet());
+                            CommandManager.find(currentDirPath, fileNameToFind);
                             break;
-
-                        
                     }
                 }
             } else {
@@ -170,18 +171,6 @@ public class App {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 // import org.jline.reader.LineReader;
 // import org.jline.reader.LineReaderBuilder;
 // import org.jline.reader.impl.completer.StringsCompleter;
@@ -191,42 +180,44 @@ public class App {
 // import java.io.IOException;
 
 // public class App {
-//     private static Terminal terminal;
-//     private static LineReader reader;
-//     private static Directory currentDir;
-//     private static int currentElement;
+// private static Terminal terminal;
+// private static LineReader reader;
+// private static Directory currentDir;
+// private static int currentElement;
 
-//     public static void main(String[] args) throws IOException {
-//         initialize();
+// public static void main(String[] args) throws IOException {
+// initialize();
 
-//         while (true) {
-//             displayCurrentState();
-//             String line = reader.readLine("> ");
-//             processCommand(line);
-//         }
-//     }
+// while (true) {
+// displayCurrentState();
+// String line = reader.readLine("> ");
+// processCommand(line);
+// }
+// }
 
-//     private static void initialize() throws IOException {
-//         terminal = TerminalBuilder.terminal();
-//         reader = LineReaderBuilder.builder()
-//                 .terminal(terminal)
-//                 .completer(new StringsCompleter("create", "mkdir", "find", "+"))
-//                 .build();
-//         currentDir = new Directory(System.getProperty("user.dir"));
-//         currentElement = 0;
-//         NoteManager.checkNotesFile();
-//     }
+// private static void initialize() throws IOException {
+// terminal = TerminalBuilder.terminal();
+// reader = LineReaderBuilder.builder()
+// .terminal(terminal)
+// .completer(new StringsCompleter("create", "mkdir", "find", "+"))
+// .build();
+// currentDir = new Directory(System.getProperty("user.dir"));
+// currentElement = 0;
+// NoteManager.checkNotesFile();
+// }
 
-//     private static void displayCurrentState() throws IOException {
-//         System.out.println("Contenu du répertoire courant :");
-//         Afficheur.displayCurrentDir(currentDir);
-//         System.out.println("\nChemin complet depuis la racine du système de fichiers :");
-//         System.out.println(currentDir.obtenirCheminComplet());
-//     }
+// private static void displayCurrentState() throws IOException {
+// System.out.println("Contenu du répertoire courant :");
+// Afficheur.displayCurrentDir(currentDir);
+// System.out.println("\nChemin complet depuis la racine du système de fichiers
+// :");
+// System.out.println(currentDir.obtenirCheminComplet());
+// }
 
-//     private static void processCommand(String line) throws IOException {
-//         String[] parts = line.split(" ");
-//         CommandProcessor commandProcessor = new CommandProcessor(currentDir, currentElement, line, parts);
-//         commandProcessor.process();
-//     }
+// private static void processCommand(String line) throws IOException {
+// String[] parts = line.split(" ");
+// CommandProcessor commandProcessor = new CommandProcessor(currentDir,
+// currentElement, line, parts);
+// commandProcessor.process();
+// }
 // }
