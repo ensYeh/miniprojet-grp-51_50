@@ -42,8 +42,9 @@ public class Directory{
         return this.chemin;
     }
     
-    public void moveTo(Path nouveauChemin) {
+    public void moveTo(Path nouveauChemin) throws IOException {
         this.chemin = nouveauChemin.toString();
+        this.contentMap = directoryMap();
     }
     public Integer getKeyForValue(Path value) {
         System.out.println(value);

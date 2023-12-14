@@ -101,9 +101,9 @@ public class NoteManager {
         }
     }
 
-    public static void deleteNoteIfExists(int number) {
+    public static void deleteNoteIfExists(int number, String chemin) {
         try {
-            Path filePath = Paths.get(FILE_NAME);
+            Path filePath = Paths.get(chemin + "/" + FILE_NAME);
     
             List<NoteEntry> noteEntries = readNotesFromJson(filePath);
     

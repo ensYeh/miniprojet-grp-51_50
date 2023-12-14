@@ -18,7 +18,7 @@ public class App {
         Terminal terminal = TerminalBuilder.terminal();
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
-                .completer(new StringsCompleter("create", "mkdir", "find", "+", "visu", "-", ".",".."))
+                .completer(new StringsCompleter("copy", "past", "cut", "mkdir", "find", "+", "visu", "-", ".",".."))
                 .build();
 
         Directory currentDir = new Directory(System.getProperty("user.dir"));
@@ -29,6 +29,7 @@ public class App {
             Afficheur.displayCurrentDir(currentDir);
             System.out.println("\nChemin complet depuis la racine du système de fichiers :");
             System.out.println(currentDir.getChemin());
+            System.out.println("Le NER courant est : " + currentElement);
             System.out.println("\nEntrer votre commande :");
 
             String line = reader.readLine("> ");
@@ -72,10 +73,19 @@ public class App {
                         currentDir.moveTo(Paths.get(currentDir.getChemin()).getParent());
                         NoteManager.checkNotesFile(currentDir.getChemin());
                         break;
-                    
 
                         case "-":
-                            NoteManager.deleteNoteIfExists(currentElement);
+                            NoteManager.deleteNoteIfExists(currentElement,currentDir.getChemin());
+                            break;
+
+                        case ".":
+                            Path path = currentDir.contentMap.get(currentElement);
+                            currentDir.moveTo(path);
+                            NoteManager.checkNotesFile(path.toString());
+                            break;
+
+                        case "visu":
+                            CommandManager.visu(currentDir, currentElement);
                             break;
 
                         case "exit":
@@ -100,8 +110,7 @@ public class App {
                     }
                     // Traitement des commandes
                     switch (parts[1]) {
-                        case "exit":
-                            return;
+
                         default:
                             System.out.println("Unknown command: " + line);
                             break;
@@ -116,17 +125,18 @@ public class App {
                             NoteManager.checkNotesFile(path.toString());
                             break;
 
+                        case "..":
+                            currentDir.moveTo(Paths.get(currentDir.getChemin()).getParent());
+                            NoteManager.checkNotesFile(currentDir.getChemin());
+                            break;
+
                         case "-":
-                            NoteManager.deleteNoteIfExists(currentElement);
+                            NoteManager.deleteNoteIfExists(currentElement,currentDir.getChemin());
                             break;
                     }
                 } else {
                     // Traitement des commandes
                     switch (parts[0]) {
-                        case "create":
-                            // Implémentez la logique de création de fichier/répertoire si nécessaire
-                            System.out.println("Création de fichier/répertoire (TBD)");
-                            break;
                         case "mkdir":
                             CommandManager.mkdir(currentDir, line);
                             currentDir = new Directory(System.getProperty("user.dir"));
@@ -134,13 +144,18 @@ public class App {
                             Integer NER = currentDir.getKeyForValue(path);
                             NoteManager.incrementNote(NER);
                             break;
-                        case "exit":
-                            return;
+
                         case "find":
                             String fileNameToFind = parts[1];
                             Path currentDirPath = Paths.get(currentDir.getChemin());
                             CommandManager.find(currentDirPath, fileNameToFind);
                             break;
+
+                        case "+":
+                            String str = line.split("\\+")[1];
+                            NoteManager.addNote(currentElement, str,currentDir.getChemin());
+                            break;
+
                         default:
                             System.out.println("Unknown command: " + line);
                             break;
@@ -159,16 +174,9 @@ public class App {
                         System.out.println("Le numéro donné n'est associé à aucun élément du répertoire");
                     }
                     // Traitement des commandes
-                    switch (parts[1]) {
-                        case "+":
-                            String str = line.split("\\+")[1];
-                            NoteManager.addNote(currentElement, str,currentDir.getChemin());
-                            break;
-                        case "exit":
-                            return;
-                        default:
-                            System.out.println("Unknown command: " + line);
-                            break;
+                    if (parts[1].equals("+")) {
+                        String str = line.split("\\+")[1];
+                        NoteManager.addNote(currentElement, str,currentDir.getChemin());
                     }
                 }
             }
