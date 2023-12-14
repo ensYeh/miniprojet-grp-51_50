@@ -21,11 +21,13 @@ public class NoteManager {
 
     private static final String FILE_NAME = "notes.json";
 
-    public static void checkNotesFile() {
+    public static void checkNotesFile(String path) {
         try {
-            Path filePath = Paths.get(FILE_NAME);
+            // Construire le chemin complet du fichier notes.json dans le répertoire actuel
+            Path filePath = Paths.get(path, FILE_NAME);
+            System.out.println(filePath);
 
-            // Vérifie si le fichier n'existe pas avant de le créer
+            // Vérifier si le fichier n'existe pas avant de le créer
             if (!Files.exists(filePath)) {
                 Files.createFile(filePath);
                 System.out.println("Le fichier \"" + FILE_NAME + "\" a été créé.");
@@ -55,10 +57,10 @@ public class NoteManager {
         }
     }
 
-    public static void addNote(int number, String note) {
+    public static void addNote(int number, String note, String path) {
         try {
-            checkNotesFile();
-            Path filePath = Paths.get(FILE_NAME);
+            checkNotesFile(path);
+            Path filePath = Paths.get(path +"/"+FILE_NAME);
 
             List<NoteEntry> noteEntries = readNotesFromJson(filePath);
 
@@ -128,11 +130,6 @@ public class NoteManager {
             System.err.println("Erreur lors de la suppression de la note dans le fichier \"" + FILE_NAME + "\": " + e.getMessage());
         }
     }
-    
-    
-
-    
-    
 
     public static void sortNotes() {
         try {
@@ -150,7 +147,8 @@ public class NoteManager {
 
     public static List<NoteEntry> readNotesFromJson(Path filePath) throws IOException {
         List<NoteEntry> noteEntries = new ArrayList<>();
-    
+        filePath = filePath.toAbsolutePath();
+
         if (Files.exists(filePath) && Files.size(filePath) > 0) {
             List<String> jsonLines = Files.readAllLines(filePath);
             StringBuilder jsonString = new StringBuilder();

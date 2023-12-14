@@ -12,17 +12,18 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Directory extends ElementFichier {
+public class Directory{
 
     Map<Integer,Path> contentMap;
+    private String chemin;
     public Directory(String chemin) throws IOException {
-        super(chemin);
+        this.chemin = chemin;
         this.contentMap = directoryMap();
     }
 
     public Map<Integer, Path> directoryMap() throws IOException {
 
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(this.obtenirCheminComplet()))) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(this.getChemin()))) {
             List<Path> elements = new ArrayList<>();
             for (Path path : stream) {
                 elements.add(path);
@@ -37,6 +38,12 @@ public class Directory extends ElementFichier {
         }
     }
 
+    public String getChemin(){
+        return this.chemin;
+    }
+    public void moveTo(Path nouveauChemin) {
+        this.chemin = nouveauChemin.toString();
+    }
     public Integer getKeyForValue(Path value) {
         System.out.println(value);
         for (Map.Entry<Integer, Path> entry : contentMap.entrySet()) {
@@ -49,7 +56,7 @@ public class Directory extends ElementFichier {
     }
 }
 
-   
+
 
 
 

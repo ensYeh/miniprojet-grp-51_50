@@ -1,6 +1,7 @@
 package fr.uvsq.cprog;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 //import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class CommandManager {
         String[] parts = line.split(" ");
         if (parts.length == 2) {
             String nomRepertoire = parts[1];
-            Path cheminComplet = Paths.get(repertoireCourant.obtenirCheminComplet());
+            Path cheminComplet = Paths.get(repertoireCourant.getChemin());
             Path nouveauRepertoire = cheminComplet.resolve(nomRepertoire);
             Files.createDirectory(nouveauRepertoire);
             System.out.println("Répertoire créé : " + nouveauRepertoire.getFileName());
@@ -76,6 +77,8 @@ public class CommandManager {
         int dotIndex = fileName.lastIndexOf('.');
         return (dotIndex == -1) ? null : fileName.substring(dotIndex + 1);
     }
+
+      
 }
 
 

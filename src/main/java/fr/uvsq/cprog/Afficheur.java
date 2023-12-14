@@ -13,7 +13,8 @@ import java.util.Map;
 public class Afficheur {
 
     public static void displayCurrentDir(Directory directory) throws IOException {
-        String fileName = "notes.json";
+        String fileName = directory.getChemin() + "/" + "notes.json";
+        System.out.println(fileName);
         Path filePath = Paths.get(fileName);
 
         // Utiliser NoteManager pour lire les notes depuis le fichier JSON
@@ -25,7 +26,7 @@ public class Afficheur {
             notesMap.put(entry.getNumber(), entry.getNotes());
         }
 
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(directory.obtenirCheminComplet()))) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(directory.getChemin()))) {
             List<Path> elements = new ArrayList<>();
             int numero = 1;
 
