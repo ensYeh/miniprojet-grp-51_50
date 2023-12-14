@@ -18,7 +18,7 @@ public class App {
         Terminal terminal = TerminalBuilder.terminal();
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
-                .completer(new StringsCompleter("create", "mkdir", "find", "+", "visu", "-", "."))
+                .completer(new StringsCompleter("create", "mkdir", "find", "+", "visu", "-", ".",".."))
                 .build();
 
         Directory currentDir = new Directory(System.getProperty("user.dir"));
@@ -67,6 +67,13 @@ public class App {
                 } else {
                     // Traitement des commandes
                     switch (parts[0]) {
+
+                        case "..":
+                        currentDir.moveTo(Paths.get(currentDir.getChemin()).getParent());
+                        NoteManager.checkNotesFile(currentDir.getChemin());
+                        break;
+                    
+
                         case "-":
                             NoteManager.deleteNoteIfExists(currentElement);
                             break;

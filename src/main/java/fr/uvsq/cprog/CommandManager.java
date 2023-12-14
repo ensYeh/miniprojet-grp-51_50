@@ -1,5 +1,6 @@
 package fr.uvsq.cprog;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.io.File;
 import java.nio.file.Path;
@@ -76,6 +77,41 @@ public class CommandManager {
         String fileName = file.getFileName().toString();
         int dotIndex = fileName.lastIndexOf('.');
         return (dotIndex == -1) ? null : fileName.substring(dotIndex + 1);
+    }
+
+    public static void cdParentAndDisplayContent(Directory repertoireCourant) {
+        try {
+            Path cheminComplet = Paths.get(repertoireCourant.getChemin());
+
+            // Obtenir le répertoire parent
+            Path parentPath = cheminComplet.getParent();
+
+            if (parentPath != null) {
+                // Mettre à jour le répertoire courant
+                repertoireCourant = new Directory(parentPath.toString());
+                System.out.println("Changement de répertoire vers : " + repertoireCourant.getChemin());
+
+                // Afficher le contenu du répertoire parent
+                displayContentAndCurrentDir(repertoireCourant);
+            } else {
+                System.out.println("Vous êtes déjà à la racine du système de fichiers.");
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors du changement de répertoire : " + e.getMessage());
+        }
+    }
+    private static void displayContentAndCurrentDir(Directory repertoireCourant) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(repertoireCourant.getChemin()))) {
+            System.out.println("\nContenu du répertoire courant :");
+            for (Path entry : stream) {
+                System.out.println(entry.getFileName());
+            }
+
+            System.out.println("\nChemin complet depuis la racine du système de fichiers :");
+            System.out.println(repertoireCourant.getChemin());
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'affichage du contenu et du chemin du répertoire courant : " + e.getMessage());
+        }
     }
 
       

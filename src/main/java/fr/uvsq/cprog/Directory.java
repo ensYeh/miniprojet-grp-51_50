@@ -41,6 +41,7 @@ public class Directory{
     public String getChemin(){
         return this.chemin;
     }
+    
     public void moveTo(Path nouveauChemin) {
         this.chemin = nouveauChemin.toString();
     }
@@ -54,6 +55,8 @@ public class Directory{
         // Retourner null si la valeur n'est pas trouvée
         return null;
     }
+
+    
 }
 
 
