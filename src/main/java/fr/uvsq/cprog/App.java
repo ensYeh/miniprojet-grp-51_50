@@ -9,6 +9,7 @@ import org.jline.terminal.TerminalBuilder;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -95,14 +96,6 @@ public class App {
                     }
                     // Traitement des commandes
                     switch (parts[1]) {
-                        case "create":
-                            // Implémentez la logique de création de fichier/répertoire si nécessaire
-                            System.out.println("Création de fichier/répertoire (TBD)");
-                            break;
-                        case "mkdir":
-                            CommandManager.mkdir(currentDir, line);
-                            break;
-
                         case "exit":
                             return;
                         default:
@@ -123,6 +116,10 @@ public class App {
                             break;
                         case "mkdir":
                             CommandManager.mkdir(currentDir, line);
+                            currentDir = new Directory(System.getProperty("user.dir"));
+                            Path path = Paths.get(currentDir.obtenirCheminComplet() +"/" + parts[1]);
+                            Integer NER = currentDir.getKeyForValue(path);
+                            NoteManager.incrementNote(NER);
                             break;
                         case "exit":
                             return;
@@ -147,13 +144,6 @@ public class App {
                     }
                     // Traitement des commandes
                     switch (parts[1]) {
-                        case "create":
-                            // Implémentez la logique de création de fichier/répertoire si nécessaire
-                            System.out.println("Création de fichier/répertoire (TBD)");
-                            break;
-                        case "mkdir":
-                            CommandManager.mkdir(currentDir, line);
-                            break;
                         case "+":
                             String str = line.split("\\+")[1];
 

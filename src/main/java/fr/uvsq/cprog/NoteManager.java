@@ -34,6 +34,24 @@ public class NoteManager {
         }
     }
 
+    public static void incrementNote(Integer X) {
+        try {
+            Path filePath = Paths.get(FILE_NAME);
+
+            List<NoteEntry> noteEntries = readNotesFromJson(filePath);
+
+            for (NoteEntry entry : noteEntries) {
+                if (entry.getNumber() >= X) {
+                    entry.setNumber(entry.getNumber() + 1);
+                }
+            }
+
+            writeNotesToJson(filePath, noteEntries);
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la modification du fichier \"" + FILE_NAME + "\": " + e.getMessage());
+        }
+    }
+
     public static void addNote(int number, String note) {
         try {
             Path filePath = Paths.get(FILE_NAME);

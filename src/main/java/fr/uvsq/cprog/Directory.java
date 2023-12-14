@@ -36,7 +36,17 @@ public class Directory extends ElementFichier {
                     ));
         }
     }
-    
+
+    public Integer getKeyForValue(Path value) {
+        System.out.println(value);
+        for (Map.Entry<Integer, Path> entry : contentMap.entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return entry.getKey();
+            }
+        }
+        // Retourner null si la valeur n'est pas trouvée
+        return null;
+    }
 }
 
    
