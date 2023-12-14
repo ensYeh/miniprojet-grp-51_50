@@ -18,13 +18,12 @@ public class App {
         Terminal terminal = TerminalBuilder.terminal();
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
-                .completer(new StringsCompleter("create", "mkdir", "find", "+", "visu"))
+                .completer(new StringsCompleter("create", "mkdir", "find", "+", "visu", "-"))
                 .build();
 
         Directory currentDir = new Directory(System.getProperty("user.dir"));
         int currentElement = 0;
         while (true) {
-            NoteManager.checkNotesFile();
             NoteManager.sortNotes();
             System.out.println("\nContenu du répertoire courant :");
             Afficheur.displayCurrentDir(currentDir);
@@ -68,13 +67,10 @@ public class App {
                 } else {
                     // Traitement des commandes
                     switch (parts[0]) {
-                        case "create":
-                            // Implémentez la logique de création de fichier/répertoire si nécessaire
-                            System.out.println("Création de fichier/répertoire (TBD)");
+                        case "-":
+                            NoteManager.deleteNoteIfExists(currentElement);
                             break;
-                        case "mkdir":
-                            CommandManager.mkdir(currentDir, line);
-                            break;
+
                         case "exit":
                             return;
                         default:
@@ -106,6 +102,11 @@ public class App {
                             CommandManager.visu(currentDir, currentElement);
 
                             break;
+
+                        case "-":
+                            NoteManager.deleteNoteIfExists(currentElement);
+                            break;
+
                     }
                 } else {
                     // Traitement des commandes
@@ -117,7 +118,7 @@ public class App {
                         case "mkdir":
                             CommandManager.mkdir(currentDir, line);
                             currentDir = new Directory(System.getProperty("user.dir"));
-                            Path path = Paths.get(currentDir.obtenirCheminComplet() +"/" + parts[1]);
+                            Path path = Paths.get(currentDir.obtenirCheminComplet() + "/" + parts[1]);
                             Integer NER = currentDir.getKeyForValue(path);
                             NoteManager.incrementNote(NER);
                             break;
@@ -146,7 +147,6 @@ public class App {
                     switch (parts[1]) {
                         case "+":
                             String str = line.split("\\+")[1];
-
                             NoteManager.addNote(currentElement, str);
                             break;
                         case "exit":

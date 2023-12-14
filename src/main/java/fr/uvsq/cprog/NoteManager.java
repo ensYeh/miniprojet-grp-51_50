@@ -4,11 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.jetbrains.annotations.Debug;
+import com.google.gson.stream.JsonReader;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,6 +57,7 @@ public class NoteManager {
 
     public static void addNote(int number, String note) {
         try {
+            checkNotesFile();
             Path filePath = Paths.get(FILE_NAME);
 
             List<NoteEntry> noteEntries = readNotesFromJson(filePath);
@@ -95,6 +99,41 @@ public class NoteManager {
         }
     }
 
+    public static void deleteNoteIfExists(int number) {
+        try {
+            Path filePath = Paths.get(FILE_NAME);
+    
+            List<NoteEntry> noteEntries = readNotesFromJson(filePath);
+    
+            boolean noteDeleted = false;
+    
+            // Supprime l'entrée correspondante au numéro
+            for (NoteEntry entry : noteEntries) {
+                if (entry.getNumber() == number) {
+                    noteEntries.remove(entry);
+                    noteDeleted = true;
+                    break;
+                }
+            }
+    
+            if (noteDeleted) {
+                // Écrivez la liste mise à jour dans le fichier existant
+                writeNotesToJson(filePath, noteEntries);
+    
+                System.out.println("Note supprimée avec succès.");
+            } else {
+                System.out.println("Aucune note trouvée avec le numéro " + number + ".");
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la suppression de la note dans le fichier \"" + FILE_NAME + "\": " + e.getMessage());
+        }
+    }
+    
+    
+
+    
+    
+
     public static void sortNotes() {
         try {
             Path filePath = Paths.get(FILE_NAME);
@@ -111,32 +150,46 @@ public class NoteManager {
 
     public static List<NoteEntry> readNotesFromJson(Path filePath) throws IOException {
         List<NoteEntry> noteEntries = new ArrayList<>();
-
+    
         if (Files.exists(filePath) && Files.size(filePath) > 0) {
             List<String> jsonLines = Files.readAllLines(filePath);
             StringBuilder jsonString = new StringBuilder();
             for (String line : jsonLines) {
                 jsonString.append(line);
             }
-
+    
+            // Supprimer tout ce qui se trouve à l'extérieur des crochets
+            int startBracket = jsonString.indexOf("[");
+            int endBracket = jsonString.lastIndexOf("]");
+            if (startBracket != -1 && endBracket != -1) {
+                jsonString.delete(0, startBracket);
+                jsonString.delete(endBracket - startBracket + 1, jsonString.length());
+            }
+    
             Gson gson = new Gson();
-            noteEntries = gson.fromJson(jsonString.toString(), new TypeToken<List<NoteEntry>>() {}.getType());
+            JsonReader reader = new JsonReader(new StringReader(jsonString.toString()));
+            reader.setLenient(true);
+    
+            noteEntries = gson.fromJson(reader, new TypeToken<List<NoteEntry>>() {}.getType());
         }
-
+    
         // Initialisation par défaut si noteEntries est nulle
         if (noteEntries == null) {
             noteEntries = new ArrayList<>();
         }
-
+    
         return noteEntries;
     }
-
     private static void writeNotesToJson(Path filePath, List<NoteEntry> noteEntries) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonContent = gson.toJson(noteEntries);
-
-        Files.write(filePath, Collections.singletonList(jsonContent), StandardOpenOption.WRITE);
+    
+        // Écrire le contenu JSON dans le fichier avec un format correct
+        Files.write(filePath, jsonContent.getBytes(), StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+    
+        System.out.println("Fichier \"" + FILE_NAME + "\" mis à jour avec succès.");
     }
+    
 }
 
 class NoteEntry implements Comparable<NoteEntry> {
