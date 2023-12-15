@@ -1,14 +1,74 @@
 package fr.uvsq.cprog;
+
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.io.File;
+import java.io.BufferedReader;
+//import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 //import java.util.ArrayList;
 //import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CommandManager {
+
+    private static Map<Integer, Path> pressePapier = new HashMap<>();
+
+    public static void cut(Directory repertoireCourant, int numeroElement) throws IOException {
+        try {
+            Path cheminComplet = repertoireCourant.directoryMap().get(numeroElement);
+    
+            if (cheminComplet != null) {
+                // Vérifiez si le chemin est un répertoire et s'il n'est pas vide
+                if (Files.isDirectory(cheminComplet) && Files.list(cheminComplet).findFirst().isPresent()) {
+                    System.out.print(
+                            "Le répertoire n'est pas vide. Êtes-vous sûr de vouloir le supprimer récursivement? (Y/N): ");
+                    String confirmation = new BufferedReader(new InputStreamReader(System.in)).readLine();
+    
+                    if (!confirmation.equalsIgnoreCase("Y")) {
+                        System.out.println("Opération annulée.");
+                        return;
+                    }
+    
+                    // Supprimer le répertoire récursivement
+                    Directory.deleteDirectory(cheminComplet);
+                } else {
+                    // Supprime la note associée dans NoteManager
+                    NoteManager.deleteNoteIfExists(numeroElement, repertoireCourant.getChemin());
+                    
+                    // Copier l'élément dans le presse-papiers
+                    pressePapier.put(numeroElement, cheminComplet);
+    
+                    // Supprimer l'élément du répertoire courant
+                    repertoireCourant.deleteElement(numeroElement);
+    
+                    System.out.println("Élément numéro " + numeroElement + " coupé et placé dans le presse-papiers.");
+                }
+            } else {
+                System.out.println("Aucun élément trouvé avec le numéro " + numeroElement);
+            }
+        } catch (IOException e) {
+            // Gérez l'exception ici
+            e.printStackTrace();
+        }
+    }
+    
+     public static void afficherPressePapier() {
+        System.out.println("\nContenu du presse-papiers :");
+        if (pressePapier != null && !pressePapier.isEmpty()) {
+            for (Map.Entry<Integer, Path> entry : pressePapier.entrySet()) {
+                System.out.println("Numéro " + entry.getKey() + ": " + entry.getValue());
+            }
+        } else {
+            System.out.println("Le presse-papiers est vide.");
+        }
+    }
+        
+
+
     public static void mkdir(Directory repertoireCourant, String line) throws IOException {
         // Créer un nouveau répertoire
         String[] parts = line.split(" ");
@@ -59,7 +119,8 @@ public class CommandManager {
                             long taille = Files.size(cheminComplet);
                             System.out.println("La taille du fichier est : " + taille + " octets");
                         } catch (IOException e) {
-                            System.err.println("Erreur lors de la récupération de la taille du fichier : " + e.getMessage());
+                            System.err.println(
+                                    "Erreur lors de la récupération de la taille du fichier : " + e.getMessage());
                         }
                     }
                 } else {
@@ -100,6 +161,7 @@ public class CommandManager {
             System.err.println("Erreur lors du changement de répertoire : " + e.getMessage());
         }
     }
+
     private static void displayContentAndCurrentDir(Directory repertoireCourant) {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(repertoireCourant.getChemin()))) {
             System.out.println("\nContenu du répertoire courant :");
@@ -110,18 +172,10 @@ public class CommandManager {
             System.out.println("\nChemin complet depuis la racine du système de fichiers :");
             System.out.println(repertoireCourant.getChemin());
         } catch (IOException e) {
-            System.err.println("Erreur lors de l'affichage du contenu et du chemin du répertoire courant : " + e.getMessage());
+            System.err.println(
+                    "Erreur lors de l'affichage du contenu et du chemin du répertoire courant : " + e.getMessage());
         }
     }
 
-      
 }
-
-
-
-
-
-    
-    
-
 

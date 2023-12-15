@@ -9,7 +9,7 @@ import org.jline.terminal.TerminalBuilder;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
+//import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +18,7 @@ public class App {
         Terminal terminal = TerminalBuilder.terminal();
         LineReader reader = LineReaderBuilder.builder()
                 .terminal(terminal)
-                .completer(new StringsCompleter("copy", "past", "cut", "mkdir", "find", "+", "visu", "-", ".",".."))
+                .completer(new StringsCompleter("press","copy", "past", "cut", "mkdir", "find", "+", "visu", "-", ".", ".."))
                 .build();
 
         Directory currentDir = new Directory(System.getProperty("user.dir"));
@@ -70,12 +70,12 @@ public class App {
                     switch (parts[0]) {
 
                         case "..":
-                        currentDir.moveTo(Paths.get(currentDir.getChemin()).getParent());
-                        NoteManager.checkNotesFile(currentDir.getChemin());
-                        break;
+                            currentDir.moveTo(Paths.get(currentDir.getChemin()).getParent());
+                            NoteManager.checkNotesFile(currentDir.getChemin());
+                            break;
 
                         case "-":
-                            NoteManager.deleteNoteIfExists(currentElement,currentDir.getChemin());
+                            NoteManager.deleteNoteIfExists(currentElement, currentDir.getChemin());
                             break;
 
                         case ".":
@@ -88,8 +88,16 @@ public class App {
                             CommandManager.visu(currentDir, currentElement);
                             break;
 
+                        case "cut":
+                            CommandManager.cut(currentDir, currentElement);
+                            break;
+
                         case "exit":
                             return;
+
+                        case "press":
+                            CommandManager.afficherPressePapier();
+                            break;
 
                         default:
                             System.out.println("Unknown command: " + line);
@@ -119,6 +127,10 @@ public class App {
                             CommandManager.visu(currentDir, currentElement);
                             break;
 
+                        case "cut":
+                            CommandManager.cut(currentDir, currentElement);
+                            break;
+
                         case ".":
                             Path path = currentDir.contentMap.get(currentElement);
                             currentDir.moveTo(path);
@@ -131,7 +143,7 @@ public class App {
                             break;
 
                         case "-":
-                            NoteManager.deleteNoteIfExists(currentElement,currentDir.getChemin());
+                            NoteManager.deleteNoteIfExists(currentElement, currentDir.getChemin());
                             break;
                     }
                 } else {
@@ -153,7 +165,7 @@ public class App {
 
                         case "+":
                             String str = line.split("\\+")[1];
-                            NoteManager.addNote(currentElement, str,currentDir.getChemin());
+                            NoteManager.addNote(currentElement, str, currentDir.getChemin());
                             break;
 
                         default:
@@ -176,11 +188,10 @@ public class App {
                     // Traitement des commandes
                     if (parts[1].equals("+")) {
                         String str = line.split("\\+")[1];
-                        NoteManager.addNote(currentElement, str,currentDir.getChemin());
+                        NoteManager.addNote(currentElement, str, currentDir.getChemin());
                     }
                 }
             }
         }
     }
 }
-
