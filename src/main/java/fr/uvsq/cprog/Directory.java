@@ -43,23 +43,6 @@ public class Directory{
         }
     }
 
-    // public Map<Integer, Path> directoryMap() throws IOException {
-
-    //     try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(this.getChemin()))) {
-    //         List<Path> elements = new ArrayList<>();
-    //         for (Path path : stream) {
-    //             elements.add(path);
-    //         }
-    //         Collections.sort(elements);
-    //         // Crée une map associant chaque numéro à son chemin correspondant
-    //         return elements.stream()
-    //                 .collect(Collectors.toMap(
-    //                         path -> elements.indexOf(path) + 1,
-    //                         Function.identity()
-    //                 ));
-    //     }
-    // }
-
     public String getChemin(){
         return this.chemin;
     }

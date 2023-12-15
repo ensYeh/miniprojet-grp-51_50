@@ -71,7 +71,6 @@ public class App {
 
                         case "..":
                             currentDir.moveTo(Paths.get(currentDir.getChemin()).getParent());
-                            NoteManager.checkNotesFile(currentDir.getChemin());
                             break;
 
                         case "-":
@@ -81,7 +80,6 @@ public class App {
                         case ".":
                             Path path = currentDir.contentMap.get(currentElement);
                             currentDir.moveTo(path);
-                            NoteManager.checkNotesFile(path.toString());
                             break;
 
                         case "visu":
@@ -134,12 +132,10 @@ public class App {
                         case ".":
                             Path path = currentDir.contentMap.get(currentElement);
                             currentDir.moveTo(path);
-                            NoteManager.checkNotesFile(path.toString());
                             break;
 
                         case "..":
                             currentDir.moveTo(Paths.get(currentDir.getChemin()).getParent());
-                            NoteManager.checkNotesFile(currentDir.getChemin());
                             break;
 
                         case "-":
@@ -151,7 +147,7 @@ public class App {
                     switch (parts[0]) {
                         case "mkdir":
                             CommandManager.mkdir(currentDir, line);
-                            currentDir = new Directory(System.getProperty("user.dir"));
+                            currentDir.contentMap = currentDir.directoryMap();
                             Path path = Paths.get(currentDir.getChemin() + "/" + parts[1]);
                             Integer NER = currentDir.getKeyForValue(path);
                             NoteManager.incrementNote(NER);
@@ -165,6 +161,7 @@ public class App {
 
                         case "+":
                             String str = line.split("\\+")[1];
+                            NoteManager.checkNotesFile(currentDir.getChemin());
                             NoteManager.addNote(currentElement, str, currentDir.getChemin());
                             break;
 
@@ -188,7 +185,9 @@ public class App {
                     // Traitement des commandes
                     if (parts[1].equals("+")) {
                         String str = line.split("\\+")[1];
-                        NoteManager.addNote(currentElement, str, currentDir.getChemin());
+                        NoteManager.checkNotesFile(currentDir.getChemin());
+                        NoteManager.addNote(currentElement, str, currentDir.getChemin());                            NoteManager.checkNotesFile(currentDir.getChemin());
+
                     }
                 }
             }
