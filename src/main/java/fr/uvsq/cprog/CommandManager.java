@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 //import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+//import java.nio.file.StandardCopyOption;
 //import java.util.ArrayList;
 //import java.util.List;
 import java.util.HashMap;
@@ -17,70 +18,57 @@ import java.util.stream.Collectors;
 
 public class CommandManager {
 
-    private static Map<Integer, Path> pressePapier = new HashMap<>();
+    public static Map<Integer, Path> pressePapier = new HashMap<>();
     private static Map<Integer, Boolean> cutFiles = new HashMap<>();
     private static int uniqueElementNumber = 1;
 
     public static void cut(Directory repertoireCourant, int numeroElement) throws IOException {
-    try {
-        Path cheminComplet = repertoireCourant.directoryMap().get(numeroElement);
-
-        if (cheminComplet != null) {
-            if (Files.isDirectory(cheminComplet) && Files.list(cheminComplet).findFirst().isPresent()) {
-                // Récupérer tous les éléments du répertoire
-                List<Path> elements = Files.list(cheminComplet).collect(Collectors.toList());
-
-                // Ajouter le répertoire lui-même à la liste
-                elements.add(cheminComplet);
-
-                // Code pour traiter les répertoires et leurs éléments
-                for (Path element : elements) {
-                    System.out.println("les element sont : " + element);
-                    int elementNumero = generateUniqueElementNumber(); // Remplacez ceci par une logique pour générer un numéro unique
-
-                    //NoteManager.deleteNoteIfExists(elementNumero, repertoireCourant.getChemin());
-                    pressePapier.put(elementNumero, element);
-                    cutFiles.put(elementNumero, true); // Marquer le fichier ou le répertoire comme coupé
-                    System.out.println("Élément numéro " + elementNumero + " coupé et placé dans le presse-papiers.");
-                }
-
-            } else {
-                //NoteManager.deleteNoteIfExists(numeroElement, repertoireCourant.getChemin());
-                pressePapier.put(numeroElement, cheminComplet);
-                cutFiles.put(numeroElement, true); // Marquer le fichier comme coupé
-                System.out.println("Élément numéro " + numeroElement + " coupé et placé dans le presse-papiers.");
-            }
-        } else {
-            System.out.println("Aucun élément trouvé avec le numéro " + numeroElement);
-        }
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-
-// Méthode factice pour générer un numéro unique pour chaque élément coupé
-private static int generateUniqueElementNumber() {
-    // Implémentez une logique pour générer un numéro unique (par exemple, utilisez un compteur)
-    return uniqueElementNumber;
-}
-
-
-    public static void copy(Directory repertoireCourant, int numeroElement) {
         try {
             Path cheminComplet = repertoireCourant.directoryMap().get(numeroElement);
 
-            if (cheminComplet != null && Files.exists(cheminComplet)) {
-                pressePapier.put(numeroElement, cheminComplet);
-                System.out.println("Élément copié dans le presse-papiers : " + cheminComplet.getFileName());
+            if (cheminComplet != null) {
+                if (Files.isDirectory(cheminComplet) && Files.list(cheminComplet).findFirst().isPresent()) {
+                    // Récupérer tous les éléments du répertoire
+                    List<Path> elements = Files.list(cheminComplet).collect(Collectors.toList());
+
+                    // Ajouter le répertoire lui-même à la liste
+                    elements.add(cheminComplet);
+
+                    // Code pour traiter les répertoires et leurs éléments
+                    for (Path element : elements) {
+                        System.out.println("les element sont : " + element);
+                        int elementNumero = generateUniqueElementNumber(); // Remplacez ceci par une logique pour
+                                                                           // générer un numéro unique
+
+                        // NoteManager.deleteNoteIfExists(elementNumero, repertoireCourant.getChemin());
+                        pressePapier.put(elementNumero, element);
+                        cutFiles.put(elementNumero, true); // Marquer le fichier ou le répertoire comme coupé
+                        System.out
+                                .println("Élément numéro " + elementNumero + " coupé et placé dans le presse-papiers.");
+                    }
+
+                } else {
+                    // NoteManager.deleteNoteIfExists(numeroElement, repertoireCourant.getChemin());
+                    pressePapier.put(numeroElement, cheminComplet);
+                    cutFiles.put(numeroElement, true); // Marquer le fichier comme coupé
+                    System.out.println("Élément numéro " + numeroElement + " coupé et placé dans le presse-papiers.");
+                }
             } else {
-                System.out.println("Erreur : Cet élément n'existe pas.");
+                System.out.println("Aucun élément trouvé avec le numéro " + numeroElement);
             }
         } catch (IOException e) {
-            System.err.println("Erreur lors de la copie de l'élément : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    public static void paste(Directory repertoireCourant) {
+    // Méthode factice pour générer un numéro unique pour chaque élément coupé
+    private static int generateUniqueElementNumber() {
+        // Implémentez une logique pour générer un numéro unique (par exemple, utilisez
+        // un compteur)
+        return uniqueElementNumber;
+    }
+
+    public static void past(Directory repertoireCourant) {
         if (!pressePapier.isEmpty()) {
             for (Map.Entry<Integer, Path> entry : pressePapier.entrySet()) {
                 Path elementACopier = entry.getValue();
@@ -90,10 +78,6 @@ private static int generateUniqueElementNumber() {
                 if (cutFiles.containsKey(numeroElement) && cutFiles.get(numeroElement)) {
                     // Coller le fichier seulement s'il est marqué comme coupé
                     Path destination = Paths.get(repertoireCourant.getChemin()).resolve(elementACopier.getFileName());
-                    // mettre une condition : si note existe : 
-                                // mettre a jour la hash map
-                                //recuperer le NER de l'element ajouté
-                                //pour toutes les notes qui ont un number > on fait +1
 
                     while (Files.exists(destination)) {
                         // Logique de gestion des conflits de noms
@@ -115,8 +99,8 @@ private static int generateUniqueElementNumber() {
                                 String nouveauNom = new BufferedReader(new InputStreamReader(System.in)).readLine();
                                 destination = Paths.get(repertoireCourant.getChemin()).resolve(nouveauNom);
                                 // mettre a jour la hash map
-                                //recuperer le NER de l'element ajouté
-                                //pour toutes les notes qui ont un number > on fait +1
+                                // récupérer le NER de l'élément ajouté
+                                // pour toutes les notes qui ont un number > on fait +1
                             } else {
                                 // Gérer le cas où l'entrée de l'utilisateur n'est pas valide
                                 System.out.println(
@@ -128,19 +112,56 @@ private static int generateUniqueElementNumber() {
                     }
 
                     try {
-                        Files.move(elementACopier, destination);
-                        System.out.println("Élément collé avec succès : " + destination);
+                        if (Files.isDirectory(elementACopier)) {
+                            copyDirectoryContents(elementACopier, destination, repertoireCourant);
+                            Files.delete(elementACopier);
+                        } else {
+                            Files.move(elementACopier, destination);
+                            System.out.println("Élément collé avec succès : " + destination);
+                        }
+
                     } catch (IOException e) {
                         System.err.println("Erreur lors du collage de l'élément : " + e.getMessage());
                     }
                 }
             }
-            // Effacer le presse-papiers après le collage
-            pressePapier.clear();
-            // Remettre à zéro l'état de coupure des fichiers
+
             cutFiles.clear();
         } else {
             System.out.println("Erreur : Il n'y a pas d'élément à coller.");
+        }
+    }
+
+    private static void copyDirectoryContents(Path source, Path target, Directory currentDir) throws IOException {
+        // Créer le répertoire de destination s'il n'existe pas
+        if (!Files.exists(target)) {
+            Files.createDirectories(target);
+        }
+
+        // Parcourir tous les fichiers du répertoire source
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(source)) {
+            System.out.println(stream);
+            System.out.println("je suis la");
+            for (Path entry : stream) {
+                System.out.println(entry);
+                Path entryTarget = target.resolve(entry.getFileName());
+                int NER = currentDir.getKeyForValue(entry);
+                // Appeler la fonction récursivement si l'entrée est un répertoire
+                if (Files.isDirectory(entry)) {
+                    copyDirectoryContents(entry, entryTarget, currentDir);
+                } else {
+                    // Copier le fichier
+                    System.out.println("je suis ici");
+                    List <String> notes =  NoteManager.getNotesForNumber(NER, currentDir.getChemin());
+                    for (int i = 0; i< notes.size(); i++){
+                        NoteManager.addNote(NER, notes.get(i),currentDir);
+                    }
+                    Files.copy(entry, entryTarget);
+                }
+                NoteManager.deleteNoteIfExists(NER,currentDir.getChemin());
+                Files.delete(entry);
+
+            }
         }
     }
 

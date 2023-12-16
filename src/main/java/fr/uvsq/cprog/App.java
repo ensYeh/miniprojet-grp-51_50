@@ -7,6 +7,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class App {
                     int number = Integer.parseInt(parts[0]);
                     if (currentDir.contentMap.containsKey(number)) {
                         currentElement = number;
-                        System.out.println("Sélection de l'élément numéro " + currentElement);
+                        // System.out.println("Sélection de l'élément numéro " + currentElement);
 
                     } else {
                         System.out.println("Le numéro donné n'est associé à aucun élément du répertoire");
@@ -53,17 +54,17 @@ public class App {
                 if (parts[1].equals("+")) {
                     String str = line.split("\\+")[1];
                     if (NoteManager.checkNotesFile(currentDir.getChemin())) {
-                        System.out.println("ici c'est pas normal non plus");
+                        // System.out.println("ici c'est pas normal non plus");
                         currentDir.contentMap = currentDir.directoryMap();
                         Path path = Paths.get(currentDir.getChemin() + "/" + "notes.json");
                         Integer NER = currentDir.getKeyForValue(path);
                         if (NER <= currentElement) {
                             NoteManager.addNote(currentElement + 1, str, currentDir);
-                        }else{
+                        } else {
                             NoteManager.addNote(currentElement, str, currentDir);
                         }
                     } else {
-                        System.out.println("je suis ici");
+
                         NoteManager.addNote(currentElement, str, currentDir);
                     }
                 } else {
@@ -77,7 +78,7 @@ public class App {
                     int number = Integer.parseInt(parts[0]);
                     if (currentDir.contentMap.containsKey(number)) {
                         currentElement = number;
-                        System.out.println("Sélection de l'élément numéro " + currentElement);
+                        // System.out.println("Sélection de l'élément numéro " + currentElement);
                     } else {
                         System.out.println("Le numéro donné n'est associé à aucun élément du répertoire");
                     }
@@ -98,20 +99,43 @@ public class App {
                             break;
 
                         case "past":
-                            CommandManager.paste(currentDir);
-                            break;
+                            System.out.println("currentDir : " + currentDir.getChemin());
+                            if (Files.exists(Paths.get(currentDir.getChemin()).resolve("notes.json"))) {
 
-                        case "copy":
-                            CommandManager.copy(currentDir, currentElement);
+                                CommandManager.past(currentDir);
+                                currentDir.contentMap = currentDir.directoryMap();
+
+                                for (Map.Entry<Integer, Path> entry : CommandManager.pressePapier.entrySet()) {
+                                    Path value = entry.getValue();
+                                    String[] chemin = value.toString().split("\\\\");
+
+                                    Path path = Paths.get(currentDir.getChemin() + "/" + chemin[chemin.length - 1]);
+
+                                    System.out.println("path : " + path);
+                                    Integer NER = currentDir.getKeyForValue(path);
+                                    System.out.println("NER : " + NER);
+                                    NoteManager.incrementNote(NER, currentDir.getChemin());
+                                }
+                                // System.out.println("currentDir final : " + currentDir.getChemin());
+
+                            } else {
+                                CommandManager.past(currentDir);
+                                currentDir.contentMap = currentDir.directoryMap();
+                            }
+                            CommandManager.pressePapier.clear();
+
                             break;
 
                         case "..":
                             currentDir.moveTo(Paths.get(currentDir.getChemin()).getParent());
-
                             break;
 
                         case "-":
                             NoteManager.deleteNoteIfExists(currentElement, currentDir.getChemin());
+                            if (NoteManager.checkAndDeleteEmptyNotesFile(currentDir.getChemin())) {
+                                // System.out.println("true");
+                                currentDir.contentMap = currentDir.directoryMap();
+                            }
                             break;
 
                         case ".":
@@ -126,6 +150,7 @@ public class App {
 
                         case "cut":
                             CommandManager.cut(currentDir, currentElement);
+                            
                             break;
 
                         case "exit":
@@ -148,7 +173,7 @@ public class App {
                     int number = Integer.parseInt(parts[0]);
                     if (currentDir.contentMap.containsKey(number)) {
                         currentElement = number;
-                        System.out.println("Sélection de l'élément numéro " + currentElement);
+                        // System.out.println("Sélection de l'élément numéro " + currentElement);
                     } else {
                         System.out.println("Le numéro donné n'est associé à aucun élément du répertoire");
                     }
@@ -167,10 +192,6 @@ public class App {
                             CommandManager.cut(currentDir, currentElement);
                             break;
 
-                        case "copy":
-                            CommandManager.copy(currentDir, currentElement);
-                            break;
-
                         case ".":
                             Path path = currentDir.contentMap.get(currentElement);
                             currentDir.moveTo(path);
@@ -184,6 +205,10 @@ public class App {
 
                         case "-":
                             NoteManager.deleteNoteIfExists(currentElement, currentDir.getChemin());
+                            if (NoteManager.checkAndDeleteEmptyNotesFile(currentDir.getChemin())) {
+                                // System.out.println("true");
+                                currentDir.contentMap = currentDir.directoryMap();
+                            }
                             break;
                     }
                 } else {
@@ -206,13 +231,13 @@ public class App {
                         case "+":
                             String str = line.split("\\+")[1];
                             if (NoteManager.checkNotesFile(currentDir.getChemin())) {
-                                System.out.println("ici c'est pas normal");
+
                                 currentDir.contentMap = currentDir.directoryMap();
                                 path = Paths.get(currentDir.getChemin() + "/" + "notes.json");
                                 NER = currentDir.getKeyForValue(path);
                                 if (NER <= currentElement) {
                                     NoteManager.addNote(currentElement + 1, str, currentDir);
-                                }else{
+                                } else {
                                     NoteManager.addNote(currentElement, str, currentDir);
                                 }
                             } else {

@@ -60,12 +60,7 @@ public class Directory{
     }
 
     public int addElement(Path element) throws IOException {
-        // Ajouter la logique pour ajouter un élément et retourner le numéro associé
-        // Assurez-vous de mettre à jour votre map contentMap après l'ajout
-        // Vous pouvez utiliser une logique similaire à celle dans la méthode directoryMap()
-        // pour obtenir le numéro associé à l'élément ajouté.
-        
-        // Exemple :
+       
         int numero = contentMap.size() + 1; // Choisissez une logique appropriée pour déterminer le numéro
         contentMap.put(numero, element);
         

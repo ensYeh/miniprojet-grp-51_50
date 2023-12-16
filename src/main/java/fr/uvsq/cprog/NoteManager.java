@@ -4,7 +4,7 @@ package fr.uvsq.cprog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import org.jetbrains.annotations.Debug;
+//import org.jetbrains.annotations.Debug;
 import com.google.gson.stream.JsonReader;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+//import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,9 +20,29 @@ import java.util.List;
 
 public class NoteManager {
 
-    private static final String FILE_NAME = "notes.json";
+    public static final String FILE_NAME = "notes.json";
 
-    public static boolean checkNotesFile(String path)  {
+    public static List<String> getNotesForNumber(int number, String path) {
+        try {
+            Path filePath = Paths.get(path, FILE_NAME);
+
+            List<NoteEntry> noteEntries = readNotesFromJson(filePath);
+
+            for (NoteEntry entry : noteEntries) {
+                if (entry.getNumber() == number) {
+                    return entry.getNotes();
+                }
+            }
+
+            System.out.println("Aucune note trouvée avec le numéro " + number + ".");
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier \"" + FILE_NAME + "\": " + e.getMessage());
+        }
+
+        return Collections.emptyList(); // Retourner une liste vide si aucune note n'est trouvée
+    }
+
+    public static boolean checkNotesFile(String path) {
         boolean fileCreated = false;
         try {
             // Construire le chemin complet du fichier notes.json dans le répertoire actuel
@@ -61,20 +81,20 @@ public class NoteManager {
         }
     }
 
-    public static void addNote(int number, String note,Directory currentDir) {
+    public static void addNote(int number, String note, Directory currentDir) {
         try {
             Path filePath = Paths.get(currentDir.getChemin(), FILE_NAME);
-           
+
             List<NoteEntry> noteEntries = readNotesFromJson(filePath);
-    
+
             for (NoteEntry entry : noteEntries) {
                 if (entry.getNumber() >= number) {
                     entry.setNumber(entry.getNumber());
                 }
             }
-    
+
             boolean found = false;
-    
+
             for (NoteEntry entry : noteEntries) {
                 if (entry.getNumber() == number) {
                     entry.addNoteText(note);
@@ -82,64 +102,19 @@ public class NoteManager {
                     break;
                 }
             }
-    
+
             if (!found) {
                 NoteEntry newEntry = new NoteEntry(number, note);
                 noteEntries.add(newEntry);
                 Collections.sort(noteEntries);
             }
-    
+
             writeNotesToJson(filePath, noteEntries);
-    
+
         } catch (IOException e) {
             System.err.println("Erreur lors de la modification du fichier \"" + FILE_NAME + "\": " + e.getMessage());
         }
     }
-    
-
-//     public static void addNote(int number, String note, String path,Directory currentDir)  {
-//         try {
-            
-//             if (checkNotesFile(path)) {// Le fichier vient d'être créé. 
-//                 Path filePath = Paths.get(path, FILE_NAME);
-//                 currentDir.contentMap = currentDir.directoryMap();
-//                 incrementNote(number, filePath.toString());
-//  }
-
-//             List<NoteEntry> noteEntries = readNotesFromJson(filePath);
-
-//             for (NoteEntry entry : noteEntries)
-
-//                 if (entry.getNumber() >= number) {
-//                     entry.setNumber(entry.getNumber() + 1);
-//                 }
-//             System.out.println(number);
-
-//             noteEntries = readNotesFromJson(filePath);
-
-//             writeNotesToJson(filePath, noteEntries);
-
-//             boolean found = false;
-
-//             for (NoteEntry entry : noteEntries) {
-//                 if (entry.getNumber() == number) {
-//                     entry.addNoteText(note);
-//                     found = true;
-//                     break;
-//                 }
-//             }
-
-//             if (!found) {
-//                 NoteEntry newEntry = new NoteEntry(number, note);
-//                 noteEntries.add(newEntry);
-//                 Collections.sort(noteEntries);
-//             }
-
-//             writeNotesToJson(filePath, noteEntries);
-//         } catch (IOException e) {
-//             System.err.println("Erreur lors de la modification du fichier \"" + FILE_NAME + "\": " + e.getMessage());
-//         }
-//     }
 
     public static void deleteNoteIfExists(int number, String chemin) {
         try {
@@ -169,6 +144,26 @@ public class NoteManager {
         } catch (IOException e) {
             System.err.println("Erreur lors de la suppression de la note dans le fichier \"" + FILE_NAME + "\": "
                     + e.getMessage());
+        }
+    }
+
+    public static boolean checkAndDeleteEmptyNotesFile(String path) {
+        try {
+            Path filePath = Paths.get(path, FILE_NAME);
+
+            // Vérifier si le fichier existe et n'est pas vide
+            if (Files.exists(filePath) && Files.size(filePath) == 2) {
+                Files.delete(filePath); // Supprimer le fichier vide
+                System.out.println("Le fichier \"" + FILE_NAME + "\" était vide et a été supprimé.");
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la vérification et suppression du fichier \"" + FILE_NAME + "\": "
+                    + e.getMessage());
+            return false;
         }
     }
 
@@ -264,108 +259,6 @@ class NoteEntry implements Comparable<NoteEntry> {
         return Integer.compare(this.number, other.number);
     }
 
+    
+
 }
-/*
- * import java.io.IOException;
- * import java.nio.file.Files;
- * import java.nio.file.Path;
- * import java.nio.file.Paths;
- * import java.nio.file.StandardOpenOption;
- * import java.util.List;
- * //import java.util.stream.Collectors;
- * import java.util.Collections;
- * //import java.util.stream.Stream;
- * 
- * public class NoteManager {
- * 
- * public static void checkNotesFile() {
- * String fileName = "notes.json";
- * Path filePath = Paths.get(fileName);
- * 
- * try {
- * // Vérifie si le fichier n'existe pas avant de le créer
- * if (!Files.exists(filePath)) {
- * Files.createFile(filePath);
- * System.out.println("Le fichier \"" + fileName + "\" a été créé.");
- * } else {
- * System.out.println("Le fichier \"" + fileName + "\" existe déjà.");
- * }
- * } catch (IOException e) {
- * System.err.println("Erreur lors de la création du fichier \"" + fileName +
- * "\": " + e.getMessage());
- * }
- * }
- * 
- * public static void addNote(int number, String note) {
- * try {
- * String fileName = "notes.json";
- * Path filePath = Paths.get(fileName);
- * 
- * List<String> lines = Files.readAllLines(filePath);
- * 
- * boolean found = false;
- * 
- * for (int i = 0; i < lines.size(); i++) {
- * String line = lines.get(i);
- * if (line.startsWith(number + " : ")) {
- * lines.set(i, number + " : " + line.substring((number + " : ").length()) + " "
- * + note);
- * found = true;
- * break;
- * }
- * }
- * 
- * if (!found) {
- * lines.add(number + " : " + note);
- * Collections.sort(lines);
- * }
- * 
- * Files.write(filePath, lines, StandardOpenOption.WRITE);
- * } catch (IOException e) {
- * System.err.
- * println("Erreur lors de la modification du fichier \"notes.json\": " +
- * e.getMessage());
- * }
- * }
- * 
- * public static void sortNotes() {
- * try {
- * String fileName = "notes.json";
- * Path filePath = Paths.get(fileName);
- * 
- * List<String> lines = Files.readAllLines(filePath);
- * 
- * Collections.sort(lines);
- * 
- * Files.write(filePath, lines, StandardOpenOption.WRITE);
- * } catch (IOException e) {
- * System.err.println("Erreur lors du tri du fichier \"notes.json\": " +
- * e.getMessage());
- * }
- * }
- * }
- * 
- */
-
-// public static void updateNote(int number, String note) {
-// try {
-// String fileName = "notes.txt";
-// Path filePath = Paths.get(fileName);
-
-// List<String> lines = Files.readAllLines(filePath);
-
-// for (int i = 0; i < lines.size(); i++) {
-// String line = lines.get(i);
-// if (line.startsWith(number + " : ")) {
-// lines.set(i, number + " : " + note);
-// break;
-// }
-// }
-
-// Files.write(filePath, lines, StandardOpenOption.WRITE);
-// } catch (IOException e) {
-// System.err.println("Erreur lors de la modification du fichier \"notes.txt\":
-// " + e.getMessage());
-// }
-// }
-// }
