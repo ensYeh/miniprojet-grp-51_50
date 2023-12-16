@@ -46,6 +46,31 @@ public class Directory{
     public String getChemin(){
         return this.chemin;
     }
+
+    public  List<Path> listContents(Path directoryPath) throws IOException {
+        List<Path> contents = new ArrayList<>();
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directoryPath)) {
+            for (Path entry : stream) {
+                contents.add(entry);
+            }
+        }
+
+        return contents;
+    }
+
+    public int addElement(Path element) throws IOException {
+        // Ajouter la logique pour ajouter un élément et retourner le numéro associé
+        // Assurez-vous de mettre à jour votre map contentMap après l'ajout
+        // Vous pouvez utiliser une logique similaire à celle dans la méthode directoryMap()
+        // pour obtenir le numéro associé à l'élément ajouté.
+        
+        // Exemple :
+        int numero = contentMap.size() + 1; // Choisissez une logique appropriée pour déterminer le numéro
+        contentMap.put(numero, element);
+        
+        return numero;
+    }
     
     public void moveTo(Path nouveauChemin) throws IOException {
         // Vérifier si le nouveau chemin correspond à un répertoire
@@ -57,6 +82,24 @@ public class Directory{
             System.out.println("Le chemin spécifié ne correspond pas à un répertoire.");
         }
     }
+
+    public static void copyDirectory(Path source, Path destination) throws IOException {
+        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                Path targetDir = destination.resolve(source.relativize(dir));
+                Files.copy(dir, targetDir);
+                return FileVisitResult.CONTINUE;
+            }
+    
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.copy(file, destination.resolve(source.relativize(file)));
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+    
 
     public Integer getKeyForValue(Path value) {
         System.out.println(value);

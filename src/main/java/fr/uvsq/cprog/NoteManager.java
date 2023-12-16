@@ -22,7 +22,8 @@ public class NoteManager {
 
     private static final String FILE_NAME = "notes.json";
 
-    public static void checkNotesFile(String path) {
+    public static boolean checkNotesFile(String path)  {
+        boolean fileCreated = false;
         try {
             // Construire le chemin complet du fichier notes.json dans le répertoire actuel
             Path filePath = Paths.get(path, FILE_NAME);
@@ -31,6 +32,7 @@ public class NoteManager {
             // Vérifier si le fichier n'existe pas avant de le créer
             if (!Files.exists(filePath)) {
                 Files.createFile(filePath);
+                fileCreated = true;
                 System.out.println("Le fichier \"" + FILE_NAME + "\" a été créé.");
             } else {
                 System.out.println("Le fichier \"" + FILE_NAME + "\" existe déjà.");
@@ -38,11 +40,12 @@ public class NoteManager {
         } catch (IOException e) {
             System.err.println("Erreur lors de la création du fichier \"" + FILE_NAME + "\": " + e.getMessage());
         }
+        return fileCreated;
     }
 
-    public static void incrementNote(Integer X) {
+    public static void incrementNote(Integer X, String path) {
         try {
-            Path filePath = Paths.get(FILE_NAME);
+            Path filePath = Paths.get(path, FILE_NAME);
 
             List<NoteEntry> noteEntries = readNotesFromJson(filePath);
 
@@ -58,26 +61,20 @@ public class NoteManager {
         }
     }
 
-    public static void addNote(int number, String note, String path) {
+    public static void addNote(int number, String note,Directory currentDir) {
         try {
-            checkNotesFile(path);
-            Path filePath = Paths.get(path + "/" + FILE_NAME);
-
+            Path filePath = Paths.get(currentDir.getChemin(), FILE_NAME);
+           
             List<NoteEntry> noteEntries = readNotesFromJson(filePath);
-
-            for (NoteEntry entry : noteEntries)
-
+    
+            for (NoteEntry entry : noteEntries) {
                 if (entry.getNumber() >= number) {
-                    entry.setNumber(entry.getNumber() + 1);
+                    entry.setNumber(entry.getNumber());
                 }
-            System.out.println(number);
-
-            noteEntries = readNotesFromJson(filePath);
-
-            writeNotesToJson(filePath, noteEntries);
-
+            }
+    
             boolean found = false;
-
+    
             for (NoteEntry entry : noteEntries) {
                 if (entry.getNumber() == number) {
                     entry.addNoteText(note);
@@ -85,18 +82,64 @@ public class NoteManager {
                     break;
                 }
             }
-
+    
             if (!found) {
                 NoteEntry newEntry = new NoteEntry(number, note);
                 noteEntries.add(newEntry);
                 Collections.sort(noteEntries);
             }
-
+    
             writeNotesToJson(filePath, noteEntries);
+    
         } catch (IOException e) {
             System.err.println("Erreur lors de la modification du fichier \"" + FILE_NAME + "\": " + e.getMessage());
         }
     }
+    
+
+//     public static void addNote(int number, String note, String path,Directory currentDir)  {
+//         try {
+            
+//             if (checkNotesFile(path)) {// Le fichier vient d'être créé. 
+//                 Path filePath = Paths.get(path, FILE_NAME);
+//                 currentDir.contentMap = currentDir.directoryMap();
+//                 incrementNote(number, filePath.toString());
+//  }
+
+//             List<NoteEntry> noteEntries = readNotesFromJson(filePath);
+
+//             for (NoteEntry entry : noteEntries)
+
+//                 if (entry.getNumber() >= number) {
+//                     entry.setNumber(entry.getNumber() + 1);
+//                 }
+//             System.out.println(number);
+
+//             noteEntries = readNotesFromJson(filePath);
+
+//             writeNotesToJson(filePath, noteEntries);
+
+//             boolean found = false;
+
+//             for (NoteEntry entry : noteEntries) {
+//                 if (entry.getNumber() == number) {
+//                     entry.addNoteText(note);
+//                     found = true;
+//                     break;
+//                 }
+//             }
+
+//             if (!found) {
+//                 NoteEntry newEntry = new NoteEntry(number, note);
+//                 noteEntries.add(newEntry);
+//                 Collections.sort(noteEntries);
+//             }
+
+//             writeNotesToJson(filePath, noteEntries);
+//         } catch (IOException e) {
+//             System.err.println("Erreur lors de la modification du fichier \"" + FILE_NAME + "\": " + e.getMessage());
+//         }
+//     }
 
     public static void deleteNoteIfExists(int number, String chemin) {
         try {
