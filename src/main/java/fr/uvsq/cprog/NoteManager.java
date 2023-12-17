@@ -63,15 +63,19 @@ public class NoteManager {
         return fileCreated;
     }
 
-    public static void incrementNote(Integer X, String path) {
+    public static void modifyNoteNumber(Integer X, String path, String val) {
         try {
             Path filePath = Paths.get(path, FILE_NAME);
 
             List<NoteEntry> noteEntries = readNotesFromJson(filePath);
-
             for (NoteEntry entry : noteEntries) {
                 if (entry.getNumber() >= X) {
-                    entry.setNumber(entry.getNumber() + 1);
+                    if (val.equals("+")){
+                        entry.setNumber(entry.getNumber() + 1);
+                    }
+                    else if (val.equals("-")){
+                        entry.setNumber(entry.getNumber() - 1);
+                    }
                 }
             }
 
@@ -84,26 +88,25 @@ public class NoteManager {
     public static void addNote(int number, String note, Directory currentDir) {
         try {
             Path filePath = Paths.get(currentDir.getChemin(), FILE_NAME);
-
             List<NoteEntry> noteEntries = readNotesFromJson(filePath);
 
-            for (NoteEntry entry : noteEntries) {
-                if (entry.getNumber() >= number) {
-                    entry.setNumber(entry.getNumber());
-                }
-            }
-
-            boolean found = false;
+            boolean noteAlreadyExists = false;
 
             for (NoteEntry entry : noteEntries) {
                 if (entry.getNumber() == number) {
-                    entry.addNoteText(note);
-                    found = true;
+                    // Vérifier si la note existe déjà avant de l'ajouter
+                    if (!entry.getNotes().contains(note)) {
+                        entry.addNoteText(note);
+                        noteAlreadyExists = true;
+                    } else {
+                        // La note existe déjà, pas besoin d'ajouter une nouvelle fois
+                        return;
+                    }
                     break;
                 }
             }
 
-            if (!found) {
+            if (!noteAlreadyExists) {
                 NoteEntry newEntry = new NoteEntry(number, note);
                 noteEntries.add(newEntry);
                 Collections.sort(noteEntries);
@@ -112,9 +115,10 @@ public class NoteManager {
             writeNotesToJson(filePath, noteEntries);
 
         } catch (IOException e) {
-            System.err.println("Erreur lors de la modification du fichier \"" + FILE_NAME + "\": " + e.getMessage());
+            System.err.println("Erreur lors de la modification du fichier" + FILE_NAME + " : " + e.getMessage());
         }
     }
+
 
     public static void deleteNoteIfExists(int number, String chemin) {
         try {

@@ -2,12 +2,9 @@ package fr.uvsq.cprog;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
+import java.nio.file.*;
 import java.io.BufferedReader;
 //import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 //import java.nio.file.StandardCopyOption;
 //import java.util.ArrayList;
 //import java.util.List;
@@ -22,7 +19,7 @@ public class CommandManager {
     private static Map<Integer, Boolean> cutFiles = new HashMap<>();
     private static int uniqueElementNumber = 1;
 
-    public static void cut(Directory repertoireCourant, int numeroElement) throws IOException {
+    public static void copyCut(Directory repertoireCourant, int numeroElement) throws IOException {
         try {
             Path cheminComplet = repertoireCourant.directoryMap().get(numeroElement);
 
@@ -68,7 +65,7 @@ public class CommandManager {
         return uniqueElementNumber;
     }
 
-    public static void past(Directory repertoireCourant) {
+    public static void past(Directory currentDir, String copyCut) throws IOException {
         if (!pressePapier.isEmpty()) {
             for (Map.Entry<Integer, Path> entry : pressePapier.entrySet()) {
                 Path elementACopier = entry.getValue();
@@ -77,90 +74,97 @@ public class CommandManager {
                 // Vérifier si le fichier est marqué comme coupé
                 if (cutFiles.containsKey(numeroElement) && cutFiles.get(numeroElement)) {
                     // Coller le fichier seulement s'il est marqué comme coupé
-                    Path destination = Paths.get(repertoireCourant.getChemin()).resolve(elementACopier.getFileName());
+                    Path destination = Paths.get(currentDir.getChemin()).resolve(elementACopier.getFileName());
+                        while (Files.exists(destination)) {
+                            // Logique de gestion des conflits de noms
+                            try {
+                                System.out.print("Le fichier '" + destination.getFileName()
+                                        + "' existe déjà. Voulez-vous renommer le fichier? (Y/N (N annule l'action): ");
+                                String choixUtilisateur = new BufferedReader(new InputStreamReader(System.in)).readLine();
 
-                    while (Files.exists(destination)) {
-                        // Logique de gestion des conflits de noms
-                        try {
-                            System.out.print("Le fichier '" + destination.getFileName()
-                                    + "' existe déjà. Voulez-vous écraser le fichier? (Y/N/R pour renommer): ");
-                            String choixUtilisateur = new BufferedReader(new InputStreamReader(System.in)).readLine();
-
-                            if (choixUtilisateur.equalsIgnoreCase("Y")) {
-                                // Écraser le fichier existant
-                                break; // Sortir de la boucle
-                            } else if (choixUtilisateur.equalsIgnoreCase("N")) {
-                                // Afficher un message et sortir de la boucle
-                                System.out.println("Impossible de copier le fichier. Opération annulée.");
-                                return; // Sortir de la méthode ou gérer de manière appropriée selon vos besoins
-                            } else if (choixUtilisateur.equalsIgnoreCase("R")) {
-                                // Demander à l'utilisateur de renommer le fichier à coller
-                                System.out.print("Veuillez entrer un nouveau nom pour le fichier à coller: ");
-                                String nouveauNom = new BufferedReader(new InputStreamReader(System.in)).readLine();
-                                destination = Paths.get(repertoireCourant.getChemin()).resolve(nouveauNom);
-                                // mettre a jour la hash map
-                                // récupérer le NER de l'élément ajouté
-                                // pour toutes les notes qui ont un number > on fait +1
-                            } else {
-                                // Gérer le cas où l'entrée de l'utilisateur n'est pas valide
-                                System.out.println(
-                                        "Entrée invalide. Veuillez entrer Y pour écraser, N pour annuler, ou R pour renommer.");
+                                if (choixUtilisateur.equalsIgnoreCase("N")) {
+                                    // Afficher un message et sortir de la boucle
+                                    System.out.println("Impossible de copier le fichier. Opération annulée.");
+                                    return; // Sortir de la méthode ou gérer de manière appropriée selon vos besoins
+                                } else if (choixUtilisateur.equalsIgnoreCase("Y")) {
+                                    // Demander à l'utilisateur de renommer le fichier à coller
+                                    System.out.print("Veuillez entrer un nouveau nom pour le fichier à coller: ");
+                                    String nouveauNom = new BufferedReader(new InputStreamReader(System.in)).readLine();
+                                    destination = Paths.get(currentDir.getChemin()).resolve(nouveauNom);
+                                    // mettre a jour la hash map
+                                    // récupérer le NER de l'élément ajouté
+                                    // pour toutes les notes qui ont un number > on fait +1
+                                } else {
+                                    // Gérer le cas où l'entrée de l'utilisateur n'est pas valide
+                                    System.out.println(
+                                            "Entrée invalide. Veuillez entrer Y pour écraser, N pour annuler, ou R pour renommer.");
+                                }
+                            } catch (IOException e) {
+                                System.err.println("Erreur lors de la lecture de l'entrée utilisateur : " + e.getMessage());
                             }
-                        } catch (IOException e) {
-                            System.err.println("Erreur lors de la lecture de l'entrée utilisateur : " + e.getMessage());
                         }
+                    if (Files.isDirectory(elementACopier)) {
+                        copyDirectoryContents(elementACopier, elementACopier, destination, currentDir, copyCut);
+                    } else {
+                        Files.copy(elementACopier, destination);
                     }
-
-                    try {
-                        if (Files.isDirectory(elementACopier)) {
-                            copyDirectoryContents(elementACopier, destination, repertoireCourant);
-                            Files.delete(elementACopier);
-                        } else {
-                            Files.move(elementACopier, destination);
-                            System.out.println("Élément collé avec succès : " + destination);
+                    currentDir.contentMap = currentDir.directoryMap();
+                    Directory parentDir = new Directory(elementACopier.getParent().toString());
+                    int NER = parentDir.getKeyForValue(elementACopier);
+                    List<String> notes = NoteManager.getNotesForNumber(NER, parentDir.getChemin());
+                    NER = currentDir.getKeyForValue(destination);
+                    NoteManager.modifyNoteNumber(NER, currentDir.getChemin(),"+");
+                    Directory targetDir = new Directory(destination.getParent().toString());
+                    for (int i = 0; i < notes.size(); i++) {
+                        System.out.println("Note : " + notes.get(i) + " repo : " + targetDir.getChemin());
+                        if (NoteManager.checkNotesFile(currentDir.getChemin())){
+                            System.out.println("Chemin : " + currentDir.getChemin());
+                            currentDir.contentMap = currentDir.directoryMap();
+                            NoteManager.modifyNoteNumber(NER, currentDir.getChemin(), "+");
+                            NER += 1;
                         }
-
-                    } catch (IOException e) {
-                        System.err.println("Erreur lors du collage de l'élément : " + e.getMessage());
+                        NoteManager.addNote(NER, notes.get(i), targetDir);
+                    }
+                    if (copyCut.equals("cut")){
+                        NER = parentDir.getKeyForValue(elementACopier);
+                        System.out.println("ParentDir = " + parentDir.getChemin());
+                        NoteManager.deleteNoteIfExists(NER,parentDir.getChemin());
+                        NoteManager.modifyNoteNumber(NER, parentDir.getChemin(),"-");
+                        Files.delete(elementACopier);
                     }
                 }
             }
-
             cutFiles.clear();
         } else {
             System.out.println("Erreur : Il n'y a pas d'élément à coller.");
         }
     }
 
-    private static void copyDirectoryContents(Path source, Path target, Directory currentDir) throws IOException {
+    private static void copyDirectoryContents(Path source,Path premier, Path target, Directory currentDir, String copyCut) throws IOException {
         // Créer le répertoire de destination s'il n'existe pas
         if (!Files.exists(target)) {
             Files.createDirectories(target);
+            currentDir.contentMap = currentDir.directoryMap();
+            if (source == premier){
+                // repertoire ou le fichier est collé
+                int NER = currentDir.getKeyForValue(target);
+                NoteManager.modifyNoteNumber(NER,currentDir.getChemin().toString(), "+");
+            }
         }
-
         // Parcourir tous les fichiers du répertoire source
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(source)) {
-            System.out.println(stream);
-            System.out.println("je suis la");
             for (Path entry : stream) {
-                System.out.println(entry);
                 Path entryTarget = target.resolve(entry.getFileName());
-                int NER = currentDir.getKeyForValue(entry);
                 // Appeler la fonction récursivement si l'entrée est un répertoire
                 if (Files.isDirectory(entry)) {
-                    copyDirectoryContents(entry, entryTarget, currentDir);
+                    copyDirectoryContents(entry, premier, entryTarget, currentDir, copyCut);
                 } else {
                     // Copier le fichier
-                    System.out.println("je suis ici");
-                    List <String> notes =  NoteManager.getNotesForNumber(NER, currentDir.getChemin());
-                    for (int i = 0; i< notes.size(); i++){
-                        NoteManager.addNote(NER, notes.get(i),currentDir);
-                    }
                     Files.copy(entry, entryTarget);
                 }
-                NoteManager.deleteNoteIfExists(NER,currentDir.getChemin());
-                Files.delete(entry);
-
+                if (copyCut.equals("cut")){
+                    Files.delete(entry);
+                }
             }
         }
     }

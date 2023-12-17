@@ -26,8 +26,8 @@ public class App {
 
         Directory currentDir = new Directory(System.getProperty("user.dir"));
         int currentElement = 0;
+        String copyCut = null;
         while (true) {
-
             NoteManager.sortNotes();
             System.out.println("\nContenu du répertoire courant :");
             Afficheur.displayCurrentDir(currentDir);
@@ -99,31 +99,8 @@ public class App {
                             break;
 
                         case "past":
-                            System.out.println("currentDir : " + currentDir.getChemin());
-                            if (Files.exists(Paths.get(currentDir.getChemin()).resolve("notes.json"))) {
-
-                                CommandManager.past(currentDir);
-                                currentDir.contentMap = currentDir.directoryMap();
-
-                                for (Map.Entry<Integer, Path> entry : CommandManager.pressePapier.entrySet()) {
-                                    Path value = entry.getValue();
-                                    String[] chemin = value.toString().split("\\\\");
-
-                                    Path path = Paths.get(currentDir.getChemin() + "/" + chemin[chemin.length - 1]);
-
-                                    System.out.println("path : " + path);
-                                    Integer NER = currentDir.getKeyForValue(path);
-                                    System.out.println("NER : " + NER);
-                                    NoteManager.incrementNote(NER, currentDir.getChemin());
-                                }
-                                // System.out.println("currentDir final : " + currentDir.getChemin());
-
-                            } else {
-                                CommandManager.past(currentDir);
-                                currentDir.contentMap = currentDir.directoryMap();
-                            }
+                            CommandManager.past(currentDir,copyCut);
                             CommandManager.pressePapier.clear();
-
                             break;
 
                         case "..":
@@ -149,10 +126,13 @@ public class App {
                             break;
 
                         case "cut":
-                            CommandManager.cut(currentDir, currentElement);
-                            
+                            copyCut = "cut";
+                            CommandManager.copyCut(currentDir, currentElement);
                             break;
-
+                        case "copy":
+                            copyCut = "copy";
+                            CommandManager.copyCut(currentDir, currentElement);
+                            break;
                         case "exit":
                             return;
 
@@ -189,7 +169,12 @@ public class App {
                             break;
 
                         case "cut":
-                            CommandManager.cut(currentDir, currentElement);
+                            copyCut = "cut";
+                            CommandManager.copyCut(currentDir, currentElement);
+                            break;
+                        case "copy":
+                            copyCut = "copy";
+                            CommandManager.copyCut(currentDir, currentElement);
                             break;
 
                         case ".":
@@ -219,7 +204,7 @@ public class App {
                             currentDir.contentMap = currentDir.directoryMap();
                             Path path = Paths.get(currentDir.getChemin() + "/" + parts[1]);
                             Integer NER = currentDir.getKeyForValue(path);
-                            NoteManager.incrementNote(NER, currentDir.getChemin());
+                            NoteManager.modifyNoteNumber(NER, currentDir.getChemin(), "+");
                             break;
 
                         case "find":
