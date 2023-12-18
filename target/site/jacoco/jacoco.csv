@@ -1,8 +1,0 @@
-GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-explorer,fr.uvsq.cprog,Afficheur,59,128,7,9,6,26,6,4,1,1
-explorer,fr.uvsq.cprog,CommandManager,562,257,51,21,104,58,31,21,2,14
-explorer,fr.uvsq.cprog,App,580,0,56,0,129,0,38,0,2,0
-explorer,fr.uvsq.cprog,NoteManager.new TypeToken() {...},0,3,0,0,0,1,0,1,0,1
-explorer,fr.uvsq.cprog,Directory,14,120,0,8,3,32,0,12,0,8
-explorer,fr.uvsq.cprog,NoteEntry,0,38,0,0,0,12,0,6,0,6
-explorer,fr.uvsq.cprog,NoteManager,101,421,12,32,24,95,11,21,0,10
