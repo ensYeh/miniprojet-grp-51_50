@@ -3,6 +3,4 @@
 <file name="/Users/kama/Documents/GitHub/M1/Java/miniprojet-grp-51_50/src/main/java/fr/uvsq/cprog/NoteManager.java">
 <error line="95" column="47" severity="warning" message="Parameter name &apos;X&apos; must match pattern &apos;^[a-z]([a-z0-9][a-zA-Z0-9]*)?$&apos;." source="com.puppycrawl.tools.checkstyle.checks.naming.ParameterNameCheck"/>
 </file>
-<file name="/Users/kama/Documents/GitHub/M1/Java/miniprojet-grp-51_50/src/main/java/fr/uvsq/cprog/CommandManager.java">
-</file>
 </checkstyle>
