@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="fr.uvsq.cprog.AppTest" time="0.579" tests="41" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="sun.desktop" value="windows"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="java.specification.version" value="1.8"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="C:\Users\Iness\OneDrive\Bureau\projetGestionnaire\miniprojet-grp-51_50\target\test-classes;C:\Users\Iness\OneDrive\Bureau\projetGestionnaire\miniprojet-grp-51_50\target\classes;C:\Users\Iness\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Iness\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Iness\.m2\repository\org\jline\jline\3.16.0\jline-3.16.0.jar;C:\Users\Iness\.m2\repository\com\google\code\gson\gson\2.8.9\gson-2.8.9.jar;C:\Users\Iness\.m2\repository\org\fusesource\jansi\jansi\2.4.0\jansi-2.4.0.jar;C:\Users\Iness\.m2\repository\org\jline\jline-terminal-jansi\3.20.0\jline-terminal-jansi-3.20.0.jar;C:\Users\Iness\.m2\repository\org\jline\jline-terminal\3.20.0\jline-terminal-3.20.0.jar;C:\Users\Iness\.m2\repository\org\mockito\mockito-core\3.9.0\mockito-core-3.9.0.jar;C:\Users\Iness\.m2\repository\net\bytebuddy\byte-buddy\1.10.20\byte-buddy-1.10.20.jar;C:\Users\Iness\.m2\repository\net\bytebuddy\byte-buddy-agent\1.10.20\byte-buddy-agent-1.10.20.jar;C:\Users\Iness\.m2\repository\org\objenesis\objenesis\3.2\objenesis-3.2.jar;C:\Users\Iness\.m2\repository\org\junit\jupiter\junit-jupiter\5.9.1\junit-jupiter-5.9.1.jar;C:\Users\Iness\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.9.1\junit-jupiter-api-5.9.1.jar;C:\Users\Iness\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\Iness\.m2\repository\org\junit\platform\junit-platform-commons\1.9.1\junit-platform-commons-1.9.1.jar;C:\Users\Iness\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Iness\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.9.1\junit-jupiter-params-5.9.1.jar;C:\Users\Iness\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.9.1\junit-jupiter-engine-5.9.1.jar;C:\Users\Iness\.m2\repository\org\junit\platform\junit-platform-engine\1.9.1\junit-platform-engine-1.9.1.jar;C:\Users\Iness\.m2\repository\org\jetbrains\annotations\24.1.0\annotations-24.1.0.jar;"/>
+    <property name="java.vm.vendor" value="Temurin"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="user.timezone" value="Europe/Paris"/>
+    <property name="java.vm.specification.version" value="1.8"/>
+    <property name="os.name" value="Windows 10"/>
+    <property name="user.country" value="FR"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\bin"/>
+    <property name="sun.java.command" value="C:\Users\Iness\AppData\Local\Temp\surefire3110056048996869241\surefirebooter2565298532415615798.jar C:\Users\Iness\AppData\Local\Temp\surefire3110056048996869241 2023-12-18T13-46-23_059-jvmRun1 surefire5992804484532612990tmp surefire_02695769513345691094tmp"/>
+    <property name="surefire.test.class.path" value="C:\Users\Iness\OneDrive\Bureau\projetGestionnaire\miniprojet-grp-51_50\target\test-classes;C:\Users\Iness\OneDrive\Bureau\projetGestionnaire\miniprojet-grp-51_50\target\classes;C:\Users\Iness\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Iness\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Iness\.m2\repository\org\jline\jline\3.16.0\jline-3.16.0.jar;C:\Users\Iness\.m2\repository\com\google\code\gson\gson\2.8.9\gson-2.8.9.jar;C:\Users\Iness\.m2\repository\org\fusesource\jansi\jansi\2.4.0\jansi-2.4.0.jar;C:\Users\Iness\.m2\repository\org\jline\jline-terminal-jansi\3.20.0\jline-terminal-jansi-3.20.0.jar;C:\Users\Iness\.m2\repository\org\jline\jline-terminal\3.20.0\jline-terminal-3.20.0.jar;C:\Users\Iness\.m2\repository\org\mockito\mockito-core\3.9.0\mockito-core-3.9.0.jar;C:\Users\Iness\.m2\repository\net\bytebuddy\byte-buddy\1.10.20\byte-buddy-1.10.20.jar;C:\Users\Iness\.m2\repository\net\bytebuddy\byte-buddy-agent\1.10.20\byte-buddy-agent-1.10.20.jar;C:\Users\Iness\.m2\repository\org\objenesis\objenesis\3.2\objenesis-3.2.jar;C:\Users\Iness\.m2\repository\org\junit\jupiter\junit-jupiter\5.9.1\junit-jupiter-5.9.1.jar;C:\Users\Iness\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.9.1\junit-jupiter-api-5.9.1.jar;C:\Users\Iness\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\Iness\.m2\repository\org\junit\platform\junit-platform-commons\1.9.1\junit-platform-commons-1.9.1.jar;C:\Users\Iness\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Iness\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.9.1\junit-jupiter-params-5.9.1.jar;C:\Users\Iness\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.9.1\junit-jupiter-engine-5.9.1.jar;C:\Users\Iness\.m2\repository\org\junit\platform\junit-platform-engine\1.9.1\junit-platform-engine-1.9.1.jar;C:\Users\Iness\.m2\repository\org\jetbrains\annotations\24.1.0\annotations-24.1.0.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\Iness"/>
+    <property name="user.language" value="fr"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.home" value="C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre"/>
+    <property name="basedir" value="C:\Users\Iness\OneDrive\Bureau\projetGestionnaire\miniprojet-grp-51_50"/>
+    <property name="file.separator" value="\"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="surefire.real.class.path" value="C:\Users\Iness\AppData\Local\Temp\surefire3110056048996869241\surefirebooter2565298532415615798.jar;C:\\Users\\Iness\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.6\\org.jacoco.agent-0.8.6-runtime.jar"/>
+    <property name="sun.boot.class.path" value="C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\lib\resources.jar;C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\lib\rt.jar;C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\lib\sunrsasign.jar;C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\lib\jsse.jar;C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\lib\jce.jar;C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\lib\charsets.jar;C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\lib\jfr.jar;C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\classes"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="1.8.0_302-b08"/>
+    <property name="user.name" value="Iness"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.endorsed.dirs" value="C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\lib\endorsed"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="Cp1252"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="localRepository" value="C:\Users\Iness\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="C:\Users\Iness\AppData\Local\Temp\"/>
+    <property name="java.version" value="1.8.0_302"/>
+    <property name="user.dir" value="C:\Users\Iness\OneDrive\Bureau\projetGestionnaire\miniprojet-grp-51_50"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="java.library.path" value="C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files\Microsoft\jdk-11.0.12.7-hotspot\bin;C:\Program Files (x86)\VMware\VMware Player\bin\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files\Git\cmd;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Users\Iness\OneDrive\Bureau\apache-maven-3.9.5\bin;C:\Users\Iness\.cargo\bin;&quot;C:\Users\Iness\AppData\Local\Microsoft\WindowsApps; C:\flutter\bin&quot;;C:\Users\Iness\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Iness\.dotnet\tools;C:\flutter\bin;;C:\Users\Iness\AppData\Local\Microsoft\WindowsApps;."/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.vendor" value="Temurin"/>
+    <property name="java.vm.version" value="25.302-b08"/>
+    <property name="java.ext.dirs" value="C:\Program Files\Android\jdk\jdk-8.0.302.8-hotspot\jdk8u302-b08\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="52.0"/>
+  </properties>
+  <testcase name="testDirectoryMap" classname="fr.uvsq.cprog.AppTest" time="0.26"/>
+  <testcase name="testMoveToInvalidDirectory" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testGetExtension_FileWithMultipleDots" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testDeleteNoteIfExists" classname="fr.uvsq.cprog.AppTest" time="0.078"/>
+  <testcase name="testAfficherPressePapierEmpty" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testGetDirectorySize_EmptyDirectory" classname="fr.uvsq.cprog.AppTest" time="0.016"/>
+  <testcase name="testCheckNotesFileFileCreated" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testFindFileExists" classname="fr.uvsq.cprog.AppTest" time="0.043"/>
+  <testcase name="testConstructorAndGetters" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testCompareTo" classname="fr.uvsq.cprog.AppTest" time="0.001"/>
+  <testcase name="testGetExtension_FileWithoutExtension" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testGetNotesForNonExistingNumber" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testMkdirInvalidUsageTooManyArguments" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testGenerateUniqueElementNumber" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testGetKeyForNonExistingValue" classname="fr.uvsq.cprog.AppTest" time="0.001"/>
+  <testcase name="testGetNotesForNumberWithIOException" classname="fr.uvsq.cprog.AppTest" time="0.003"/>
+  <testcase name="testAddNoteText" classname="fr.uvsq.cprog.AppTest" time="0.001"/>
+  <testcase name="testMoveToValidDirectory" classname="fr.uvsq.cprog.AppTest" time="0.002"/>
+  <testcase name="testGetKeyForExistingValue" classname="fr.uvsq.cprog.AppTest" time="0.003"/>
+  <testcase name="testCopyCutWithDirectory" classname="fr.uvsq.cprog.AppTest" time="0.003"/>
+  <testcase name="testSortNotes" classname="fr.uvsq.cprog.AppTest" time="0.022"/>
+  <testcase name="testDirectoryMapNotEmpty" classname="fr.uvsq.cprog.AppTest" time="0.005"/>
+  <testcase name="testCheckAndDeleteEmptyNotesFile_NonExistingFile" classname="fr.uvsq.cprog.AppTest" time="0.002"/>
+  <testcase name="testWriteNotesToJson" classname="fr.uvsq.cprog.AppTest" time="0.005"/>
+  <testcase name="testSetChemin" classname="fr.uvsq.cprog.AppTest" time="0.002"/>
+  <testcase name="testMkdirSuccess" classname="fr.uvsq.cprog.AppTest" time="0.003"/>
+  <testcase name="testGetDirectorySize_DirectoryWithSubdirectories" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testMkdirInvalidUsage" classname="fr.uvsq.cprog.AppTest" time="0.004"/>
+  <testcase name="testGetDirectorySize_DirectoryWithFiles" classname="fr.uvsq.cprog.AppTest" time="0.003"/>
+  <testcase name="testCopyCutWithFile" classname="fr.uvsq.cprog.AppTest" time="0.003"/>
+  <testcase name="testModifyNoteNumberIncrement" classname="fr.uvsq.cprog.AppTest" time="0.013"/>
+  <testcase name="testGetChemin" classname="fr.uvsq.cprog.AppTest" time="0.003"/>
+  <testcase name="testSetNumber" classname="fr.uvsq.cprog.AppTest" time="0.001"/>
+  <testcase name="testGetExtension_FileWithExtension" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testVisuDirectory" classname="fr.uvsq.cprog.AppTest" time="0.084"/>
+  <testcase name="testDisplayCurrentDirWithNotes" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testAddNoteNoteDoesNotExist" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testMoveTo" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testGetNotesForExistingNumber" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testCopyCutWithNonexistentElement" classname="fr.uvsq.cprog.AppTest" time="0"/>
+  <testcase name="testGetExtension_HiddenFileWithoutExtension" classname="fr.uvsq.cprog.AppTest" time="0"/>
+</testsuite>
