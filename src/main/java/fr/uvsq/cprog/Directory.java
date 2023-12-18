@@ -2,12 +2,10 @@ package fr.uvsq.cprog;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
-import java.nio.file.FileVisitResult;
+//import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,14 +13,59 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Directory{
+/**
+ * Cette classe représente un répertoire dans le gestionnaire de fichiers.
+ * Elle offre des fonctionnalités pour obtenir des informations sur le contenu
+ * du répertoire,
+ * changer le chemin du répertoire, et déplacer le répertoire vers un nouveau
+ * chemin.
+ */
+public class Directory {
 
-    Map<Integer,Path> contentMap;
+    /**
+     * Map associant chaque numéro à son chemin correspondant dans le répertoire.
+     */
+
+    Map<Integer, Path> contentMap;
+
+    /**
+     * Le chemin du répertoire.
+     */
     private String chemin;
+
+    /**
+     * Constructeur de la classe Directory.
+     *
+     * @param chemin Le chemin du répertoire.
+     * @throws IOException En cas d'erreur d'entrée/sortie lors de la création du
+     *                     répertoire.
+     */
+
     public Directory(String chemin) throws IOException {
         this.chemin = chemin;
         this.contentMap = directoryMap();
     }
+
+    /**
+     * Constructeur de la classe Directory avec une map de contenu spécifiée.
+     *
+     * @param chemin     Le chemin du répertoire.
+     * @param contentMap Map associant chaque numéro à son chemin correspondant.
+     */
+
+    public Directory(String chemin, Map<Integer, Path> contentMap) {
+        this.chemin = chemin;
+        this.contentMap = contentMap;
+    }
+
+    /**
+     * Obtient la map associant chaque numéro à son chemin correspondant dans le
+     * répertoire.
+     *
+     * @return La map de contenu du répertoire.
+     * @throws IOException En cas d'erreur d'entrée/sortie lors de la récupération
+     *                     du contenu du répertoire.
+     */
 
     public Map<Integer, Path> directoryMap() throws IOException {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(this.getChemin()))) {
@@ -35,66 +78,61 @@ public class Directory{
             return elements.stream()
                     .collect(Collectors.toMap(
                             path -> elements.indexOf(path) + 1,
-                            Function.identity()
-                    ));
+                            Function.identity()));
         } catch (IOException e) {
             System.err.println("Erreur lors de la création du répertoire : " + e.getMessage());
             return Collections.emptyMap(); // Ou retournez une valeur par défaut appropriée
         }
     }
 
-    public String getChemin(){
+    /**
+     * Obtient le chemin du répertoire.
+     *
+     * @return Le chemin du répertoire.
+     */
+
+    public String getChemin() {
         return this.chemin;
     }
 
-    public  List<Path> listContents(Path directoryPath) throws IOException {
-        List<Path> contents = new ArrayList<>();
+    /**
+     * Modifie le chemin du répertoire.
+     *
+     * @param chemin Le nouveau chemin du répertoire.
+     */
 
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directoryPath)) {
-            for (Path entry : stream) {
-                contents.add(entry);
-            }
-        }
-
-        return contents;
+    public void setChemin(String chemin) {
+        this.chemin = chemin;
     }
 
-    public int addElement(Path element) throws IOException {
-       
-        int numero = contentMap.size() + 1; // Choisissez une logique appropriée pour déterminer le numéro
-        contentMap.put(numero, element);
-        
-        return numero;
-    }
-    
+    /**
+     * Déplace le répertoire vers un nouveau chemin spécifié.
+     *
+     * @param nouveauChemin Le nouveau chemin du répertoire.
+     * @throws IOException En cas d'erreur d'entrée/sortie lors de l'opération de
+     *                     déplacement.
+     */
+
     public void moveTo(Path nouveauChemin) throws IOException {
         // Vérifier si le nouveau chemin correspond à un répertoire
         if (Files.isDirectory(nouveauChemin)) {
             this.chemin = nouveauChemin.toString();
             this.contentMap = directoryMap();
         } else {
-            // Si ce n'est pas un répertoire, vous pouvez lancer une exception ou prendre d'autres mesures selon vos besoins.
+            // Si ce n'est pas un répertoire, vous pouvez lancer une exception ou prendre
+            // d'autres mesures selon vos besoins.
             System.out.println("Le chemin spécifié ne correspond pas à un répertoire.");
         }
     }
 
-    public static void copyDirectory(Path source, Path destination) throws IOException {
-        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                Path targetDir = destination.resolve(source.relativize(dir));
-                Files.copy(dir, targetDir);
-                return FileVisitResult.CONTINUE;
-            }
-    
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.copy(file, destination.resolve(source.relativize(file)));
-                return FileVisitResult.CONTINUE;
-            }
-        });
-    }
-    
+    /**
+     * Obtient la clé associée à une valeur (chemin) dans la map de contenu du
+     * répertoire.
+     *
+     * @param value Le chemin dont on cherche la clé.
+     * @return La clé associée au chemin spécifié, ou null si la valeur n'est pas
+     *         trouvée.
+     */
 
     public Integer getKeyForValue(Path value) {
         System.out.println(value);
@@ -107,50 +145,4 @@ public class Directory{
         return null;
     }
 
-    public void deleteElement(int numeroElement) throws IOException {
-        Path elementPath = contentMap.get(numeroElement);
-        if (elementPath != null) {
-            Files.delete(elementPath);
-            // Mettez à jour la map après la suppression du fichier
-            contentMap = directoryMap();
-            System.out.println("Élément numéro " + numeroElement + " supprimé.");
-        } else {
-            System.out.println("Aucun élément trouvé avec le numéro " + numeroElement);
-        }
-    }
-
-    public static void deleteDirectory(Path directory) throws IOException {
-    Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            Files.delete(file);
-            return FileVisitResult.CONTINUE;
-        }
-
-        @Override
-        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-            // Handle the case where the visit of a file fails
-            return FileVisitResult.CONTINUE;
-        }
-
-        @Override
-        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-            if (exc == null) {
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-            } else {
-                // Directory iteration failed
-                throw exc;
-            }
-        }
-    });
 }
-
-    
-}
-
-
-
-
-
-

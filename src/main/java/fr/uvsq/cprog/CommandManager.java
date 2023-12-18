@@ -4,20 +4,46 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.*;
 import java.io.BufferedReader;
-//import java.io.File;
-//import java.nio.file.StandardCopyOption;
-//import java.util.ArrayList;
-//import java.util.List;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Cette classe gère les opérations de copie, coupe, collage, création de
+ * répertoires,
+ * recherche de fichiers, visualisation du contenu, et autres commandes du
+ * gestionnaire de fichiers.
+ */
+
 public class CommandManager {
 
+    /**
+     * Le presse-papiers qui stocke les éléments copiés ou coupés.
+     */
+
     public static Map<Integer, Path> pressePapier = new HashMap<>();
-    private static Map<Integer, Boolean> cutFiles = new HashMap<>();
+
+    /**
+     * Map indiquant si les fichiers correspondant aux numéros sont coupés (true) ou
+     * copiés (false).
+     */
+    public static Map<Integer, Boolean> cutFiles = new HashMap<>();
+
+    /**
+     * Numéro unique pour chaque élément dans le gestionnaire de fichiers.
+     */
     private static int uniqueElementNumber = 1;
+
+    /**
+     * Copie ou coupe les éléments spécifiés dans le presse-papiers.
+     *
+     * @param repertoireCourant Le répertoire courant où se trouvent les éléments à
+     *                          copier ou couper.
+     * @param numeroElement     Le numéro de l'élément à copier ou couper.
+     * @throws IOException En cas d'erreur d'entrée/sortie lors de l'opération de
+     *                     copie ou coupe.
+     */
 
     public static void copyCut(Directory repertoireCourant, int numeroElement) throws IOException {
         try {
@@ -58,12 +84,25 @@ public class CommandManager {
         }
     }
 
-    // Méthode factice pour générer un numéro unique pour chaque élément coupé
-    private static int generateUniqueElementNumber() {
-        // Implémentez une logique pour générer un numéro unique (par exemple, utilisez
-        // un compteur)
+    /**
+     * Génère un numéro unique pour un élément.
+     *
+     * @return Le numéro unique généré.
+     */
+
+    public static int generateUniqueElementNumber() {
+
         return uniqueElementNumber;
     }
+
+    /**
+     * Colle les éléments du presse-papiers dans le répertoire courant.
+     *
+     * @param currentDir Le répertoire courant où coller les éléments.
+     * @param copyCut    Indique si les éléments sont copiés ou coupés.
+     * @throws IOException En cas d'erreur d'entrée/sortie lors de l'opération de
+     *                     collage.
+     */
 
     public static void past(Directory currentDir, String copyCut) throws IOException {
         if (!pressePapier.isEmpty()) {
@@ -75,34 +114,34 @@ public class CommandManager {
                 if (cutFiles.containsKey(numeroElement) && cutFiles.get(numeroElement)) {
                     // Coller le fichier seulement s'il est marqué comme coupé
                     Path destination = Paths.get(currentDir.getChemin()).resolve(elementACopier.getFileName());
-                        while (Files.exists(destination)) {
-                            // Logique de gestion des conflits de noms
-                            try {
-                                System.out.print("Le fichier '" + destination.getFileName()
-                                        + "' existe déjà. Voulez-vous renommer le fichier? (Y/N (N annule l'action): ");
-                                String choixUtilisateur = new BufferedReader(new InputStreamReader(System.in)).readLine();
+                    while (Files.exists(destination)) {
+                        // Logique de gestion des conflits de noms
+                        try {
+                            System.out.print("Le fichier '" + destination.getFileName()
+                                    + "' existe déjà. Voulez-vous renommer le fichier? (Y/N (N annule l'action): ");
+                            String choixUtilisateur = new BufferedReader(new InputStreamReader(System.in)).readLine();
 
-                                if (choixUtilisateur.equalsIgnoreCase("N")) {
-                                    // Afficher un message et sortir de la boucle
-                                    System.out.println("Impossible de copier le fichier. Opération annulée.");
-                                    return; // Sortir de la méthode ou gérer de manière appropriée selon vos besoins
-                                } else if (choixUtilisateur.equalsIgnoreCase("Y")) {
-                                    // Demander à l'utilisateur de renommer le fichier à coller
-                                    System.out.print("Veuillez entrer un nouveau nom pour le fichier à coller: ");
-                                    String nouveauNom = new BufferedReader(new InputStreamReader(System.in)).readLine();
-                                    destination = Paths.get(currentDir.getChemin()).resolve(nouveauNom);
-                                    // mettre a jour la hash map
-                                    // récupérer le NER de l'élément ajouté
-                                    // pour toutes les notes qui ont un number > on fait +1
-                                } else {
-                                    // Gérer le cas où l'entrée de l'utilisateur n'est pas valide
-                                    System.out.println(
-                                            "Entrée invalide. Veuillez entrer Y pour écraser, N pour annuler, ou R pour renommer.");
-                                }
-                            } catch (IOException e) {
-                                System.err.println("Erreur lors de la lecture de l'entrée utilisateur : " + e.getMessage());
+                            if (choixUtilisateur.equalsIgnoreCase("N")) {
+                                // Afficher un message et sortir de la boucle
+                                System.out.println("Impossible de copier le fichier. Opération annulée.");
+                                return; // Sortir de la méthode ou gérer de manière appropriée selon vos besoins
+                            } else if (choixUtilisateur.equalsIgnoreCase("Y")) {
+                                // Demander à l'utilisateur de renommer le fichier à coller
+                                System.out.print("Veuillez entrer un nouveau nom pour le fichier à coller: ");
+                                String nouveauNom = new BufferedReader(new InputStreamReader(System.in)).readLine();
+                                destination = Paths.get(currentDir.getChemin()).resolve(nouveauNom);
+                                // mettre a jour la hash map
+                                // récupérer le NER de l'élément ajouté
+                                // pour toutes les notes qui ont un number > on fait +1
+                            } else {
+                                // Gérer le cas où l'entrée de l'utilisateur n'est pas valide
+                                System.out.println(
+                                        "Entrée invalide. Veuillez entrer Y pour écraser, N pour annuler, ou R pour renommer.");
                             }
+                        } catch (IOException e) {
+                            System.err.println("Erreur lors de la lecture de l'entrée utilisateur : " + e.getMessage());
                         }
+                    }
                     if (Files.isDirectory(elementACopier)) {
                         copyDirectoryContents(elementACopier, elementACopier, destination, currentDir, copyCut);
                     } else {
@@ -113,11 +152,11 @@ public class CommandManager {
                     int NER = parentDir.getKeyForValue(elementACopier);
                     List<String> notes = NoteManager.getNotesForNumber(NER, parentDir.getChemin());
                     NER = currentDir.getKeyForValue(destination);
-                    NoteManager.modifyNoteNumber(NER, currentDir.getChemin(),"+");
+                    NoteManager.modifyNoteNumber(NER, currentDir.getChemin(), "+");
                     Directory targetDir = new Directory(destination.getParent().toString());
                     for (int i = 0; i < notes.size(); i++) {
                         System.out.println("Note : " + notes.get(i) + " repo : " + targetDir.getChemin());
-                        if (NoteManager.checkNotesFile(currentDir.getChemin())){
+                        if (NoteManager.checkNotesFile(currentDir.getChemin())) {
                             System.out.println("Chemin : " + currentDir.getChemin());
                             currentDir.contentMap = currentDir.directoryMap();
                             NoteManager.modifyNoteNumber(NER, currentDir.getChemin(), "+");
@@ -125,11 +164,11 @@ public class CommandManager {
                         }
                         NoteManager.addNote(NER, notes.get(i), targetDir);
                     }
-                    if (copyCut.equals("cut")){
+                    if (copyCut.equals("cut")) {
                         NER = parentDir.getKeyForValue(elementACopier);
                         System.out.println("ParentDir = " + parentDir.getChemin());
-                        NoteManager.deleteNoteIfExists(NER,parentDir.getChemin());
-                        NoteManager.modifyNoteNumber(NER, parentDir.getChemin(),"-");
+                        NoteManager.deleteNoteIfExists(NER, parentDir.getChemin());
+                        NoteManager.modifyNoteNumber(NER, parentDir.getChemin(), "-");
                         Files.delete(elementACopier);
                     }
                 }
@@ -140,15 +179,16 @@ public class CommandManager {
         }
     }
 
-    private static void copyDirectoryContents(Path source,Path premier, Path target, Directory currentDir, String copyCut) throws IOException {
+    private static void copyDirectoryContents(Path source, Path premier, Path target, Directory currentDir,
+            String copyCut) throws IOException {
         // Créer le répertoire de destination s'il n'existe pas
         if (!Files.exists(target)) {
             Files.createDirectories(target);
             currentDir.contentMap = currentDir.directoryMap();
-            if (source == premier){
+            if (source == premier) {
                 // repertoire ou le fichier est collé
                 int NER = currentDir.getKeyForValue(target);
-                NoteManager.modifyNoteNumber(NER,currentDir.getChemin().toString(), "+");
+                NoteManager.modifyNoteNumber(NER, currentDir.getChemin().toString(), "+");
             }
         }
         // Parcourir tous les fichiers du répertoire source
@@ -162,12 +202,16 @@ public class CommandManager {
                     // Copier le fichier
                     Files.copy(entry, entryTarget);
                 }
-                if (copyCut.equals("cut")){
+                if (copyCut.equals("cut")) {
                     Files.delete(entry);
                 }
             }
         }
     }
+
+    /**
+     * Affiche le contenu du presse-papiers.
+     */
 
     public static void afficherPressePapier() {
         System.out.println("\nContenu du presse-papiers :");
@@ -179,6 +223,16 @@ public class CommandManager {
             System.out.println("Le presse-papiers est vide.");
         }
     }
+
+    /**
+     * Crée un nouveau répertoire dans le répertoire courant.
+     *
+     * @param repertoireCourant Le répertoire courant où créer le nouveau
+     *                          répertoire.
+     * @param line              La ligne de commande entrée par l'utilisateur.
+     * @throws IOException En cas d'erreur d'entrée/sortie lors de la création du
+     *                     répertoire.
+     */
 
     public static void mkdir(Directory repertoireCourant, String line) throws IOException {
         // Créer un nouveau répertoire
@@ -193,6 +247,13 @@ public class CommandManager {
             System.out.println("Utilisation incorrecte. Exemple : mkdir nomDuRepertoire");
         }
     }
+
+    /**
+     * Recherche un fichier dans le répertoire courant et ses sous-répertoires.
+     *
+     * @param currentDir Le répertoire courant où effectuer la recherche.
+     * @param fileName   Le nom du fichier à rechercher.
+     */
 
     public static void find(Path currentDir, String fileName) {
         try {
@@ -212,6 +273,13 @@ public class CommandManager {
             System.err.println("Erreur lors de la recherche du fichier : " + e.getMessage());
         }
     }
+
+    /**
+     * Affiche des informations sur un élément dans le répertoire courant.
+     *
+     * @param repertoireCourant Le répertoire courant.
+     * @param numeroElement     Le numéro de l'élément à afficher.
+     */
 
     public static void visu(Directory repertoireCourant, int numeroElement) {
         try {
@@ -255,8 +323,17 @@ public class CommandManager {
         }
     }
 
+    // Méthode pour obtenir la taille d'un répertoire...
+
+    /**
+     * Modifie le presse-papiers avec une nouvelle map d'éléments.
+     *
+     * @param newpressePapier La nouvelle map d'éléments à mettre dans le
+     *                        presse-papiers.
+     */
+
     // Méthode pour obtenir la taille d'un répertoire
-    private static long getDirectorySize(Path directory) throws IOException {
+    public static long getDirectorySize(Path directory) throws IOException {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory)) {
             long size = 0;
             for (Path entry : stream) {
@@ -269,9 +346,20 @@ public class CommandManager {
         }
     }
 
-    private static String getExtension(Path file) {
+    public static void setPressePapier(Map<Integer, Path> newpressePapier) {
+        pressePapier = newpressePapier;
+    }
+
+    public static String getExtension(Path file) {
         String fileName = file.getFileName().toString();
+
+        // Ignorer les fichiers cachés sans extension
+        if (fileName.startsWith(".") && fileName.lastIndexOf('.') == 0) {
+            return null;
+        }
+
         int dotIndex = fileName.lastIndexOf('.');
         return (dotIndex == -1) ? null : fileName.substring(dotIndex + 1);
     }
+
 }

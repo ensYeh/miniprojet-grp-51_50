@@ -11,9 +11,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
-//import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+/**
+ * Méthode principale de l'application. Lance une boucle infinie pour lire les
+ * commandes
+ * de l'utilisateur depuis la console et exécute les actions correspondantes.
+ * Les commandes disponibles sont liées à la gestion d'un répertoire et des
+ * notes associées.
+ * 
+ * @param args Les arguments de la ligne de commande (non utilisés dans cette
+ *             application).
+ * @throws IOException En cas d'erreur d'entrée/sortie lors de l'exécution des
+ *                     commandes.
+ */
 
 public class App {
     public static void main(String[] args) throws IOException {
@@ -99,7 +111,7 @@ public class App {
                             break;
 
                         case "past":
-                            CommandManager.past(currentDir,copyCut);
+                            CommandManager.past(currentDir, copyCut);
                             CommandManager.pressePapier.clear();
                             break;
 

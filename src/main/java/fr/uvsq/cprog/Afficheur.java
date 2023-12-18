@@ -1,4 +1,5 @@
 package fr.uvsq.cprog;
+
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -9,6 +10,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * Affiche le contenu du répertoire spécifié, en associant les notes lues depuis
+ * le fichier JSON "notes.json" avec les éléments du répertoire.
+ * 
+ * @param directory Le répertoire à afficher.
+ * @throws IOException En cas d'erreur lors de la lecture des notes depuis le
+ *                     fichier JSON.
+ */
 
 public class Afficheur {
 
@@ -42,13 +52,15 @@ public class Afficheur {
 
                 if (Files.isDirectory(path)) {
                     if (notes != null && !notes.isEmpty()) {
-                        System.out.println(numero + ". \u001B[34m" + path.getFileName() + "/\u001B[0m" + " : " + String.join(", ", notes)); // Blue for directories
+                        System.out.println(numero + ". \u001B[34m" + path.getFileName() + "/\u001B[0m" + " : "
+                                + String.join(", ", notes)); // Blue for directories
                     } else {
                         System.out.println(numero + ". \u001B[34m" + path.getFileName() + "/\u001B[0m");
                     }
                 } else {
                     if (notes != null && !notes.isEmpty()) {
-                        System.out.println(numero + ". \u001B[31m" + path.getFileName() + "\u001B[0m" + " : " + String.join(", ", notes)); // Red for files
+                        System.out.println(numero + ". \u001B[31m" + path.getFileName() + "\u001B[0m" + " : "
+                                + String.join(", ", notes)); // Red for files
                     } else {
                         System.out.println(numero + ". \u001B[31m" + path.getFileName() + "\u001B[0m");
                     }
@@ -59,14 +71,3 @@ public class Afficheur {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-

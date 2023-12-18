@@ -4,7 +4,7 @@ package fr.uvsq.cprog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-//import org.jetbrains.annotations.Debug;
+
 import com.google.gson.stream.JsonReader;
 
 import java.io.IOException;
@@ -12,15 +12,32 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-//import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Gestionnaire de notes qui fournit des méthodes pour interagir avec les
+ * fichiers de notes.
+ */
+
 public class NoteManager {
 
+    /**
+     * Nom du fichier de notes JSON.
+     */
+
     public static final String FILE_NAME = "notes.json";
+
+    /**
+     * Récupère les notes pour un numéro donné.
+     *
+     * @param number Le numéro de la note à récupérer.
+     * @param path   Le chemin du répertoire dans lequel se trouve le fichier de
+     *               notes.
+     * @return La liste des notes pour le numéro donné.
+     */
 
     public static List<String> getNotesForNumber(int number, String path) {
         try {
@@ -41,6 +58,14 @@ public class NoteManager {
 
         return Collections.emptyList(); // Retourner une liste vide si aucune note n'est trouvée
     }
+
+    /**
+     * Vérifie si le fichier de notes existe déjà dans le répertoire actuel.
+     *
+     * @param path Le chemin du répertoire dans lequel se trouve le fichier de
+     *             notes.
+     * @return true si le fichier de notes a été créé, false sinon.
+     */
 
     public static boolean checkNotesFile(String path) {
         boolean fileCreated = false;
@@ -63,6 +88,15 @@ public class NoteManager {
         return fileCreated;
     }
 
+    /**
+     * Modifie le numéro de toutes les notes supérieures ou égales à X.
+     *
+     * @param X    Le numéro à partir duquel les notes doivent être modifiées.
+     * @param path Le chemin du répertoire dans lequel se trouve le fichier de
+     *             notes.
+     * @param val  La valeur à ajouter ou à soustraire au numéro de la note.
+     */
+
     public static void modifyNoteNumber(Integer X, String path, String val) {
         try {
             Path filePath = Paths.get(path, FILE_NAME);
@@ -70,10 +104,9 @@ public class NoteManager {
             List<NoteEntry> noteEntries = readNotesFromJson(filePath);
             for (NoteEntry entry : noteEntries) {
                 if (entry.getNumber() >= X) {
-                    if (val.equals("+")){
+                    if (val.equals("+")) {
                         entry.setNumber(entry.getNumber() + 1);
-                    }
-                    else if (val.equals("-")){
+                    } else if (val.equals("-")) {
                         entry.setNumber(entry.getNumber() - 1);
                     }
                 }
@@ -84,6 +117,15 @@ public class NoteManager {
             System.err.println("Erreur lors de la modification du fichier \"" + FILE_NAME + "\": " + e.getMessage());
         }
     }
+
+    /**
+     * Ajoute une note pour un numéro donné.
+     *
+     * @param number     Le numéro de la note à laquelle ajouter une note.
+     * @param note       La note à ajouter.
+     * @param currentDir Le répertoire actuel dans lequel se trouve le fichier de
+     *                   notes.
+     */
 
     public static void addNote(int number, String note, Directory currentDir) {
         try {
@@ -119,6 +161,14 @@ public class NoteManager {
         }
     }
 
+    /**
+     * Supprime une note pour un numéro donné.
+     *
+     * @param number     Le numéro de la note à laquelle supprimer une note.
+     * @param note       La note à supprimer.
+     * @param currentDir Le répertoire actuel dans lequel se trouve le fichier de
+     *                   notes.
+     */
 
     public static void deleteNoteIfExists(int number, String chemin) {
         try {
@@ -151,6 +201,14 @@ public class NoteManager {
         }
     }
 
+    /**
+     * Supprime le fichier de notes s'il est vide.
+     *
+     * @param path Le chemin du répertoire dans lequel se trouve le fichier de
+     *             notes.
+     * @return true si le fichier de notes a été supprimé, false sinon.
+     */
+
     public static boolean checkAndDeleteEmptyNotesFile(String path) {
         try {
             Path filePath = Paths.get(path, FILE_NAME);
@@ -171,6 +229,10 @@ public class NoteManager {
         }
     }
 
+    /**
+     * Trie les notes par numéro.
+     */
+
     public static void sortNotes() {
         try {
             Path filePath = Paths.get(FILE_NAME);
@@ -184,6 +246,15 @@ public class NoteManager {
             System.err.println("Erreur lors du tri du fichier \"" + FILE_NAME + "\": " + e.getMessage());
         }
     }
+
+    /**
+     * Lit les entrées de notes depuis le fichier JSON et les retourne sous forme de
+     * liste.
+     *
+     * @param filePath Le chemin du fichier JSON de notes.
+     * @return Une liste d'objets NoteEntry.
+     * @throws IOException En cas d'erreur lors de la lecture du fichier.
+     */
 
     public static List<NoteEntry> readNotesFromJson(Path filePath) throws IOException {
         List<NoteEntry> noteEntries = new ArrayList<>();
@@ -220,7 +291,15 @@ public class NoteManager {
         return noteEntries;
     }
 
-    private static void writeNotesToJson(Path filePath, List<NoteEntry> noteEntries) throws IOException {
+    /**
+     * Écrit les entrées de notes dans le fichier JSON.
+     *
+     * @param filePath    Le chemin du fichier JSON de notes.
+     * @param noteEntries La liste d'objets NoteEntry à écrire dans le fichier.
+     * @throws IOException En cas d'erreur lors de l'écriture dans le fichier.
+     */
+
+    public static void writeNotesToJson(Path filePath, List<NoteEntry> noteEntries) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonContent = gson.toJson(noteEntries);
 
@@ -232,9 +311,28 @@ public class NoteManager {
 
 }
 
+/**
+ * Représente une entrée de note associée à un numéro et à une liste de notes.
+ */
+
 class NoteEntry implements Comparable<NoteEntry> {
+
+    /**
+     * Le numéro associé à cette entrée de note.
+     */
+
     private int number;
+    /**
+     * La liste des notes associées à ce numéro.
+     */
     private List<String> notes;
+
+    /**
+     * Constructeur de la classe NoteEntry.
+     *
+     * @param number Le numéro associé à cette entrée de note.
+     * @param note   Le texte initial de la note.
+     */
 
     public NoteEntry(int number, String note) {
         this.number = number;
@@ -242,27 +340,57 @@ class NoteEntry implements Comparable<NoteEntry> {
         this.notes.add(note);
     }
 
+    /**
+     * Obtient le numéro associé à cette entrée de note.
+     *
+     * @return Le numéro associé à cette entrée de note.
+     */
+
     public int getNumber() {
         return number;
     }
+
+    /**
+     * Modifie le numéro associé à cette entrée de note.
+     *
+     * @param number Le nouveau numéro à associer à cette entrée de note.
+     */
 
     public void setNumber(int number) {
         this.number = number;
     }
 
+    /**
+     * Obtient la liste des notes associées à ce numéro.
+     *
+     * @return La liste des notes associées à ce numéro.
+     */
+
     public List<String> getNotes() {
         return notes;
     }
+
+    /**
+     * Ajoute une nouvelle note à la liste des notes associées à ce numéro.
+     *
+     * @param noteText Le texte de la nouvelle note à ajouter.
+     */
 
     public void addNoteText(String noteText) {
         notes.add(noteText);
     }
 
+    /**
+     * Compare cette entrée de note à une autre en se basant sur les numéros.
+     *
+     * @param other L'autre entrée de note à comparer.
+     * @return Une valeur négative, nulle ou positive si cette entrée est plus
+     *         petite, égale ou plus grande que l'autre.
+     */
+
     @Override
     public int compareTo(NoteEntry other) {
         return Integer.compare(this.number, other.number);
     }
-
-    
 
 }

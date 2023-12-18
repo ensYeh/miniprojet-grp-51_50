@@ -45,6 +45,12 @@
       <version>3.20.0</version>
     </dependency>
     <dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-core</artifactId>
+    <version>3.9.0</version> <!-- Use the latest version available -->
+    <scope>test</scope>
+</dependency>
+    <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter</artifactId>
     <version>5.9.1</version>
@@ -70,6 +76,27 @@
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.0.2</version>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-wrapper-plugin</artifactId>
+            <version>3.6.0</version>
+            <configuration>
+                <downloadUrl>https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/0.5.5/maven-wrapper-0.5.5.jar</downloadUrl>
+                <outputDir>./.mvn/wrapper/</outputDir>
+                <archive>
+                    <manifestEntries>
+                        <Main-Class>io.takari.maven.wrapper.MavenWrapperDownloader</Main-Class>
+                    </manifestEntries>
+                </archive>
+            </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>wrapper</goal>
+                    </goals>
+                </execution>
+            </executions>
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -129,7 +156,7 @@
         <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.7</version> <!-- Utilisez la version la plus récente -->
+            <version>0.8.6</version> <!-- Utilisez la version la plus récente -->
             <executions>
                 <execution>
                     <goals>
@@ -172,3 +199,8 @@
     </pluginManagement>
   </build>
 </project>
+
+
+
+
+
