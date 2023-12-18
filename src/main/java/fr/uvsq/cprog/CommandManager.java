@@ -18,77 +18,74 @@ import java.util.stream.Collectors;
 
 public class CommandManager {
 
-    /**
-     * Le presse-papiers qui stocke les éléments copiés ou coupés.
-     */
+  /**
+    * Le presse-papiers qui stocke les éléments copiés ou coupés.
+   */
 
-    public static Map<Integer, Path> pressePapier = new HashMap<>();
+  public static Map<Integer, Path> pressePapier = new HashMap<>();
 
-    /**
-     * Map indiquant si les fichiers correspondant aux numéros sont coupés (true) ou
-     * copiés (false).
-     */
-    public static Map<Integer, Boolean> cutFiles = new HashMap<>();
+  /**
+    * Map indiquant si les fichiers correspondant aux numéros sont coupés (true) ou
+    * copiés (false).
+    */
+  public static Map<Integer, Boolean> cutFiles = new HashMap<>();
 
-    /**
-     * Numéro unique pour chaque élément dans le gestionnaire de fichiers.
-     */
-    private static int uniqueElementNumber = 1;
+  /**
+    * Numéro unique pour chaque élément dans le gestionnaire de fichiers.
+    */
+  private static int uniqueElementNumber = 1;
 
-    /**
-     * Copie ou coupe les éléments spécifiés dans le presse-papiers.
-     *
-     * @param repertoireCourant Le répertoire courant où se trouvent les éléments à
-     *                          copier ou couper.
-     * @param numeroElement     Le numéro de l'élément à copier ou couper.
-     * @throws IOException En cas d'erreur d'entrée/sortie lors de l'opération de
-     *                     copie ou coupe.
-     */
+  /**
+    * Copie ou coupe les éléments spécifiés dans le presse-papiers.
+    *
+    * @param repertoireCourant Le répertoire courant où se trouvent les éléments à
+    *                          copier ou couper.
+    * @param numeroElement     Le numéro de l'élément à copier ou couper.
+    * @throws IOException En cas d'erreur d'entrée/sortie lors de l'opération de
+    *                     copie ou coupe.
+    */
 
-    public static void copyCut(Directory repertoireCourant, int numeroElement) throws IOException {
-        try {
-            Path cheminComplet = repertoireCourant.directoryMap().get(numeroElement);
+  public static void copyCut(Directory repertoireCourant, int numeroElement) throws IOException {
+    try {
+      Path cheminComplet = repertoireCourant.directoryMap().get(numeroElement);
 
-            if (cheminComplet != null) {
-                if (Files.isDirectory(cheminComplet) && Files.list(cheminComplet).findFirst().isPresent()) {
-                    // Récupérer tous les éléments du répertoire
-                    List<Path> elements = Files.list(cheminComplet).collect(Collectors.toList());
+      if (cheminComplet != null) {
+        if (Files.isDirectory(cheminComplet) && Files.list(cheminComplet).findFirst().isPresent()) {
+          // Récupérer tous les éléments du répertoire
+          List<Path> elements = Files.list(cheminComplet).collect(Collectors.toList());
 
-                    // Ajouter le répertoire lui-même à la liste
-                    elements.add(cheminComplet);
+          // Ajouter le répertoire lui-même à la liste
+          elements.add(cheminComplet);
 
-                    // Code pour traiter les répertoires et leurs éléments
-                    for (Path element : elements) {
-                        System.out.println("les element sont : " + element);
-                        int elementNumero = generateUniqueElementNumber(); // Remplacez ceci par une logique pour
-                                                                           // générer un numéro unique
+          // Code pour traiter les répertoires et leurs éléments
+          for (Path element : elements) {
+            System.out.println("les element sont : " + element);
+            int elementNumero = generateUniqueElementNumber();
 
-                        // NoteManager.deleteNoteIfExists(elementNumero, repertoireCourant.getChemin());
-                        pressePapier.put(elementNumero, element);
-                        cutFiles.put(elementNumero, true); // Marquer le fichier ou le répertoire comme coupé
-                        System.out
-                                .println("Élément numéro " + elementNumero + " coupé et placé dans le presse-papiers.");
-                    }
+            pressePapier.put(elementNumero, element);
+            cutFiles.put(elementNumero, true); // Marquer le fichier ou le répertoire comme coupé
+            System.out.println("Élément numéro " + elementNumero + " coupé et placé dans le presse-papiers.");
+          }
 
-                } else {
-                    // NoteManager.deleteNoteIfExists(numeroElement, repertoireCourant.getChemin());
-                    pressePapier.put(numeroElement, cheminComplet);
-                    cutFiles.put(numeroElement, true); // Marquer le fichier comme coupé
-                    System.out.println("Élément numéro " + numeroElement + " coupé et placé dans le presse-papiers.");
-                }
-            } else {
-                System.out.println("Aucun élément trouvé avec le numéro " + numeroElement);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+          // NoteManager.deleteNoteIfExists(numeroElement, repertoireCourant.getChemin());
+          pressePapier.put(numeroElement, cheminComplet);
+          cutFiles.put(numeroElement, true); // Marquer le fichier comme coupé
+          System.out.println("Élément numéro " + numeroElement + " coupé et placé dans le presse-papiers.");
         }
+      } else {
+        System.out.println("Aucun élément trouvé avec le numéro " + numeroElement);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * Génère un numéro unique pour un élément.
-     *
-     * @return Le numéro unique généré.
-     */
+  /**
+    * Génère un numéro unique pour un élément.
+    *
+    * @return Le numéro unique généré.
+    */
 
     public static int generateUniqueElementNumber() {
 

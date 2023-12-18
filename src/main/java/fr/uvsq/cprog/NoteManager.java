@@ -39,7 +39,8 @@ public class NoteManager {
      * @return La liste des notes pour le numéro donné.
      */
 
-    public static List<String> getNotesForNumber(int number, String path) {
+    public static List<String> getNotesForNumber(final int number,
+                                                 final String path) {
         try {
             Path filePath = Paths.get(path, FILE_NAME);
 
@@ -51,7 +52,8 @@ public class NoteManager {
                 }
             }
 
-            System.out.println("Aucune note trouvée avec le numéro " + number + ".");
+            System.out.println("Aucune note trouvée avec le numéro "
+                    + number + ".");
         } catch (IOException e) {
             System.err.println("Erreur lors de la lecture du fichier \"" + FILE_NAME + "\": " + e.getMessage());
         }
@@ -165,9 +167,6 @@ public class NoteManager {
      * Supprime une note pour un numéro donné.
      *
      * @param number     Le numéro de la note à laquelle supprimer une note.
-     * @param note       La note à supprimer.
-     * @param currentDir Le répertoire actuel dans lequel se trouve le fichier de
-     *                   notes.
      */
 
     public static void deleteNoteIfExists(int number, String chemin) {

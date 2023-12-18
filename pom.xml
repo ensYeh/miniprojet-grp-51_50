@@ -136,23 +136,34 @@
                 <target>1.8</target>
             </configuration>
         </plugin>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.1.1</version> <!-- Utilisez la version la plus récente -->
-            <executions>
-                <execution>
-                    <id>validate</id>
-                    <phase>validate</phase>
-                    <configuration>
-                        <configLocation>google_checks.xml</configLocation> <!-- Fichier de configuration Checkstyle pour Google -->
-                    </configuration>
-                    <goals>
-                        <goal>check</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-checkstyle-plugin</artifactId>
+              <version>3.3.1</version>
+              <dependencies>
+                  <dependency>
+                      <groupId>com.puppycrawl.tools</groupId>
+                      <artifactId>checkstyle</artifactId>
+                      <version>10.12.4</version>
+                  </dependency>
+              </dependencies>
+              <configuration>
+                  <configLocation>target/google_checks.xml</configLocation>
+                  <inputEncoding>UTF-8</inputEncoding>
+                  <consoleOutput>true</consoleOutput>
+                  <failsOnError>true</failsOnError>
+                  <linkXRef>false</linkXRef>
+              </configuration>
+              <executions>
+                  <execution>
+                      <id>validate</id>
+                      <phase>validate</phase>
+                      <goals>
+                          <goal>check</goal>
+                      </goals>
+                  </execution>
+              </executions>
+          </plugin>
         <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
