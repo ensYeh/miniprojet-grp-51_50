@@ -111,7 +111,9 @@ $ java -jar target/explorer-1.0.jar
 
 > Comment consulter le rapport de couverture de code par les tests ?
 
-Pour consulter le rapport de couverture de code par les tests, il faut se rendre dans le dossier target/site/jacoco/index.html et ouvrir le fichier index.html avec un navigateur web.  Le rapport de couverture de code par les tests est disponible dans la partie "Classses" du rapport. et on utilise cette commande pour genere le fichier dans target  : mvn clean jacoco:prepare-agent install jacoco:report
+Pour consulter le rapport de couverture de code par les tests, il faut se rendre dans le dossier target/site/jacoco/index.html et ouvrir le fichier index.html
+avec un navigateur web. Le rapport de couverture de code par les tests est disponible dans la partie "Classses" du rapport.
+Et on utilise cette commande pour genere le fichier dans target  : mvn clean jacoco:prepare-agent install jacoco:report
 
 > Quel est le rôle des différentes classes ?
 
@@ -165,8 +167,24 @@ CommandManager :
 
 > Quels traitements sont réalisés pour gérer une commande saisie par l'utilisateur ? Donnez un exemple.
 
-l utilisateur peut lancer n’importe quelle commande avec n’importe quel NER. Toutefois il se peut que la fonction n’effectue rien. 
+l'utilisateur peut lancer n’importe quelle commande avec n’importe quel NER. Toutefois il se peut que la fonction n’effectue rien.
 Exemple si l’utilisateur souhaite supprimer une note pour un NER qui n’a pas de notes alors il pourra le faire mais cela ne fera rien.
+
+Lorsque la commande est reçue elle est split par les espaces de celle-ci et est stocké dans une liste de String.
+Le code va dans un premier temps regarder si la taille de la liste est égale à 1 ou à 2 ou supérieur ou égale à 3.
+Cette verification à lieu car il est possible de faire <"3 visu"> en une commande mais aussi <"3"> puis <"visu"> donc en 2 commandes.
+Le cas ou la taille du tableau est superieur à 3 est géré car lors d'un ajout d'une note on peut avoir un tableau très grand si la note est longue
+Pour le reste de l'explication nous allons prendre un exemple avec la commande suivante : "3 + je réponds à la question" (pas de guillemets à la saisie de la commande)
+Le code split la commande pas " " (espace). Ce qui donne [3,+,je,réponds,à,la,question]
+Puis il regarde la taille du tableau qui ici est de taille 7
+Le premier element tu tableau est verifié. Ici c'esr bien un NER donc le second élément est analysé.
+Pour ça on regarde s'il s'agit d'une des commandes disponibles. Ici c'est le cas avec le "+"
+La vérification se fait via un switch. De ce fait nous rentrons dans le cas du "+".
+La commande est ensuite lancée avec le reste du tableau qui dans notre cas correspond à la note.
+Si la commande n'avait pas été reconnu nous aurions eu un message d'erreur et une nouvelle saisie de commande nous aurait été proposée.
+
+Le principe est le même si la commande avait été composée que d'un seul ou 2 éléments.
+
 
 
 > Quelles améliorations peut-on envisager ?  
