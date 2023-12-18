@@ -332,17 +332,6 @@ public class CommandManager {
    * @param directory Le chemin du répertoire.
    * @return La taille totale des fichiers réguliers dans le répertoire, en octets.
    * @throws IOException En cas d'erreur d'accès au répertoire.
-   *
-   * Exemple :
-   * {@code
-   *   Path directoryPath = Paths.get("/chemin/vers/repertoire");
-   *   try {
-   *       long size = getDirectorySize(directoryPath);
-   *       System.out.println("Taille du répertoire : " + size + " octets");
-   *   } catch (IOException e) {
-   *       System.err.println("Erreur d'accès au répertoire : " + e.getMessage());
-   *   }
-   * }
    */
 
   public static long getDirectorySize(Path directory) throws IOException {
@@ -372,13 +361,6 @@ public class CommandManager {
    *
    * @param file Le chemin du fichier.
    * @return L'extension du fichier, ou null si aucun fichier ou extension n'est trouvé.
-   *
-   * Exemple :
-   * {@code
-   *   Path filePath = Paths.get("exemple.txt");
-   *   String extension = getExtension(filePath);
-   *   System.out.println("Extension : " + extension);
-   * }
    */
   public static String getExtension(Path file) {
     String fileName = file.getFileName().toString();

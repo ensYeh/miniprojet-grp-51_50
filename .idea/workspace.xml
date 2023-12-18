@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7837a52f-b552-4655-8678-9a52b253dd4b" name="Changes" comment="" />
+    <list default="true" id="7837a52f-b552-4655-8678-9a52b253dd4b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/fr/uvsq/cprog/NoteEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/uvsq/cprog/CommandManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/uvsq/cprog/CommandManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/uvsq/cprog/NoteManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/uvsq/cprog/NoteManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/checkstyle-cachefile" beforeDir="false" afterPath="$PROJECT_DIR$/target/checkstyle-cachefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/checkstyle-result.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/checkstyle-result.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -72,7 +79,7 @@
       <workItem from="1702485029990" duration="15617000" />
       <workItem from="1702566605410" duration="18017000" />
       <workItem from="1702717316354" duration="59000" />
-      <workItem from="1702925910256" duration="2657000" />
+      <workItem from="1702925910256" duration="4670000" />
     </task>
     <servers />
   </component>
